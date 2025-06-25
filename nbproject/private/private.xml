@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/sehuy/BookingService/web/AdminDashboard.jsp</file>
+            <file>file:/D:/sehuy/BookingService/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/PrepareChangeProfileController.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Model/Service.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Model/Booking.java</file>
+            <file>file:/D:/sehuy/BookingService/web/BookingForm.jsp</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/HomeController.java</file>
+            <file>file:/D:/sehuy/BookingService/web/ServiceDetail.jsp</file>
+            <file>file:/D:/sehuy/BookingService/web/UserDetailForAdmin.jsp</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/ListUserController.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/ResetPasswordController.java</file>
+            <file>file:/D:/sehuy/BookingService/web/index.jsp</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/ChangePersonalInformationController.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/AdminDashboardController.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Model/Staff.java</file>
+            <file>file:/D:/sehuy/BookingService/web/UserChangeProfile.jsp</file>
+            <file>file:/D:/sehuy/BookingService/src/java/DAO/StaffDAO.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/UnbanUserController.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/DAO/DaoService.java</file>
+            <file>file:/D:/sehuy/BookingService/web/AdminServices.jsp</file>
+            <file>file:/D:/sehuy/BookingService/src/java/DAO/UserDAO.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/ServiceDetailController.java</file>
+            <file>file:/D:/sehuy/BookingService/web/Service.jsp</file>
+            <file>file:/D:/sehuy/BookingService/web/Header.jsp</file>
+            <file>file:/D:/sehuy/BookingService/web/AdminBookings.jsp</file>
+            <file>file:/D:/sehuy/BookingService/web/AdminSetup.jsp</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/RegisterController.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Model/Shift.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/ListAllService.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Model/User.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/BanUserController.java</file>
+            <file>file:/D:/sehuy/BookingService/src/java/Controller/UserDetailForAdminController.java</file>
+        </group>
+    </open-files>
+</project-private>

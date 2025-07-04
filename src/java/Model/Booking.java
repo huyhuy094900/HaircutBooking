@@ -6,6 +6,10 @@ package Model;
 
 import java.sql.Timestamp;
 import java.sql.Date;
+import Model.User;
+import Model.Service;
+import Model.Staff;
+import Model.Shift;
 
 /**
  *

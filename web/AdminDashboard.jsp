@@ -166,6 +166,12 @@
                         <a class="nav-link" href="admin?action=bookings">
                             <i class="bi bi-calendar-check"></i> Quản lý đặt lịch
                         </a>
+                        <a class="nav-link" href="NotificationController">
+                            <i class="bi bi-bell"></i> Thông báo
+                            <c:if test="${unreadNotificationCount > 0}">
+                                <span class="badge bg-danger ms-2">${unreadNotificationCount}</span>
+                            </c:if>
+                        </a>
                         <hr style="border-color: rgba(255,255,255,0.3);">
                         <a class="nav-link" href="logout">
                             <i class="bi bi-box-arrow-right"></i> Đăng xuất

@@ -39,9 +39,14 @@
         <div class="col-lg-10">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="text-primary"><i class="bi bi-list-ul me-2"></i>Lịch Hẹn Của Tôi</h2>
-                <a href="BookingController" class="btn btn-outline-primary">
-                    <i class="bi bi-calendar-plus me-1"></i>Đặt Lịch Mới
-                </a>
+                <div>
+                    <a href="BookingController" class="btn btn-outline-primary me-2">
+                        <i class="bi bi-calendar-plus me-1"></i>Đặt Lịch Mới
+                    </a>
+                    <a href="home" class="btn btn-outline-secondary">
+                        <i class="bi bi-house me-1"></i>Về Trang Chủ
+                    </a>
+                </div>
             </div>
             <c:choose>
                 <c:when test="${empty bookings}">
@@ -96,6 +101,15 @@
                                                 <i class="bi bi-chat-text me-1"></i>
                                                 <b>Ghi Chú:</b> ${booking.note}
                                             </div>
+                                        </c:if>
+                                        <c:if test="${booking.status eq 'Pending' || booking.status eq 'Confirmed'}">
+                                            <form method="post" action="BookingController" onsubmit="return confirm('Bạn có chắc muốn hủy lịch hẹn này?');">
+                                                <input type="hidden" name="action" value="cancel" />
+                                                <input type="hidden" name="bookingId" value="${booking.bookingId}" />
+                                                <button type="submit" class="btn btn-danger btn-sm mt-2">
+                                                    <i class="bi bi-x-circle"></i> Hủy lịch
+                                                </button>
+                                            </form>
                                         </c:if>
                                     </div>
                                 </div>

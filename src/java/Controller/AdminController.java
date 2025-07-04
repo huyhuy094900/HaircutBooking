@@ -4,6 +4,7 @@ import DAO.BookingDAO;
 import DAO.DaoUser;
 import DAO.DaoService;
 import DAO.StaffDAO;
+import DAO.NotificationDAO;
 import Model.Booking;
 import Model.User;
 import Model.Service;
@@ -43,6 +44,7 @@ public class AdminController extends HttpServlet {
             DaoUser userDAO = new DaoUser();
             DaoService serviceDAO = new DaoService();
             StaffDAO staffDAO = new StaffDAO();
+            NotificationDAO notificationDAO = new NotificationDAO();
             
             // Route to appropriate method
             if ("users".equals(action)) {
@@ -59,7 +61,7 @@ public class AdminController extends HttpServlet {
                 showBookings(request, response, bookingDAO, userDAO, serviceDAO, staffDAO);
             } else {
                 System.out.println("AdminController: Routing to showDashboard (default)");
-                showDashboard(request, response, bookingDAO, userDAO, serviceDAO, staffDAO);
+                showDashboard(request, response, bookingDAO, userDAO, serviceDAO, staffDAO, notificationDAO);
             }
             
         } catch (Exception e) {
@@ -91,7 +93,7 @@ public class AdminController extends HttpServlet {
     }
 
     private void showDashboard(HttpServletRequest request, HttpServletResponse response,
-                             BookingDAO bookingDAO, DaoUser userDAO, DaoService serviceDAO, StaffDAO staffDAO) 
+                             BookingDAO bookingDAO, DaoUser userDAO, DaoService serviceDAO, StaffDAO staffDAO, NotificationDAO notificationDAO) 
             throws ServletException, IOException {
         
         try {
@@ -195,6 +197,16 @@ public class AdminController extends HttpServlet {
             request.setAttribute("totalRevenue", String.format("%.0f", totalRevenue));
             request.setAttribute("activeUsers", activeUsers);
             request.setAttribute("availableStaff", availableStaff);
+            
+            // Load unread notification count
+            try {
+                int unreadCount = notificationDAO.getUnreadCount();
+                request.setAttribute("unreadNotificationCount", unreadCount);
+                System.out.println("AdminController: Loaded " + unreadCount + " unread notifications");
+            } catch (Exception e) {
+                System.out.println("AdminController: Error loading notifications: " + e.getMessage());
+                request.setAttribute("unreadNotificationCount", 0);
+            }
             
             // Set recent data
             List<User> recentUsers = allUsers.size() > 5 ? allUsers.subList(0, 5) : allUsers;

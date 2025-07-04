@@ -85,4 +85,28 @@ public class DaoService extends DBContext {
         }
         return list;
     }
+
+    public Service getServiceById(int serviceId) {
+        String sql = "SELECT * FROM Services WHERE service_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, serviceId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Service s = new Service();
+                    s.setServiceId(rs.getInt("service_id"));
+                    s.setName(rs.getString("name"));
+                    s.setDescription(rs.getString("description"));
+                    s.setDuration(rs.getInt("duration"));
+                    s.setPrice(rs.getBigDecimal("price"));
+                    s.setImage(rs.getString("image"));
+                    s.setServiceStatus(rs.getBoolean("service_status"));
+                    s.setCreatedAt(rs.getTimestamp("created_at"));
+                    return s;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -69,6 +69,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="BookingController">Đặt lịch</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="BookingController?action=list">
+                                    <i class="bi bi-list-ul me-1"></i>Lịch hẹn của tôi
+                                </a>
+                            </li>
                         </c:if>
                         <c:if test="${not empty sessionScope.user}">
                             <li class="nav-item dropdown">

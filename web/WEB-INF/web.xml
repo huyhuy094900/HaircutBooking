@@ -108,6 +108,10 @@
         <servlet-name>SimpleBookingController</servlet-name>
         <servlet-class>Controller.SimpleBookingController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NotificationController</servlet-name>
+        <servlet-class>Controller.NotificationController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -187,5 +191,9 @@
     <servlet-mapping>
         <servlet-name>SimpleBookingController</servlet-name>
         <url-pattern>/simple_booking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationController</servlet-name>
+        <url-pattern>/NotificationController</url-pattern>
     </servlet-mapping>
 </web-app>

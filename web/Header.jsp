@@ -61,6 +61,7 @@
                         <c:if test="${not empty sessionScope.user and not sessionScope.user.admin}">
                             <li><a href="home" class="active">Trang chủ</a></li>
                             <li><a href="ServiceDirect.jsp">Dịch vụ</a></li>
+                            <li><a href="BookingController?action=list"><i class="bi bi-list-ul me-1"></i>Lịch hẹn của tôi</a></li>
                         </c:if>
                         <c:if test="${not empty sessionScope.user}">
                             <li class="dropdown">
@@ -69,8 +70,8 @@
                                     <i class="bi bi-chevron-down toggle-dropdown"></i>
                                 </a>
                                 <ul>
-                                    <li><a href="BookingController?action=list">Lịch hẹn của tôi</a></li>
-                                    <li><a href="logout">Đăng xuất</a></li>
+                                    <li><a href="BookingController?action=list"><i class="bi bi-list-ul me-1"></i> Lịch hẹn của tôi</a></li>
+                                    <li><a href="logout"><i class="bi bi-box-arrow-right me-1"></i> Đăng xuất</a></li>
                                 </ul>
                             </li>
                         </c:if>

@@ -23,7 +23,7 @@ public class BookingDAO extends DBContext {
             ps.setInt(3, booking.getStaffId());
             ps.setInt(4, booking.getShiftsId());
             ps.setDate(5, booking.getBookingDate());
-            ps.setString(6, "Pending");
+            ps.setString(6, booking.getStatus() != null ? booking.getStatus() : "Pending");
             ps.setString(7, booking.getNote());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -135,6 +135,23 @@ public class BookingDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) == 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean hasTimeSlotConflict(int staffId, int shiftId, Date bookingDate) {
+        String sql = "SELECT COUNT(*) FROM Bookings WHERE staff_id = ? AND shifts_id = ? AND booking_date = ? AND status IN ('Pending', 'Confirmed')";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ps.setInt(2, shiftId);
+            ps.setDate(3, bookingDate);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {

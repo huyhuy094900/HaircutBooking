@@ -3,6 +3,7 @@ package Controller;
 import DAO.BookingDAO;
 import DAO.DaoService;
 import DAO.StaffDAO;
+import DAO.NotificationDAO;
 import Model.Booking;
 import Model.Service;
 import Model.Staff;
@@ -83,9 +84,23 @@ public class BookingController extends HttpServlet {
             Date bookingDate = Date.valueOf(request.getParameter("bookingDate"));
             String note = request.getParameter("note");
             
-            // Check availability
-            if (!bookingDAO.isTimeSlotAvailable(staffId, shiftId, bookingDate)) {
-                request.setAttribute("error", "Khung gi\u1EDD \u0111\u00E3 ch\u1ECDn kh\u00F4ng c\u00F2n tr\u1ED1ng!");
+            // Check if there are any existing bookings for this time slot
+            boolean hasConflict = bookingDAO.hasTimeSlotConflict(staffId, shiftId, bookingDate);
+            
+            if (hasConflict) {
+                // Nạp lại dữ liệu cho dropdown
+                DaoService serviceDAO = new DaoService();
+                StaffDAO staffDAO = new StaffDAO();
+                List<Service> services = serviceDAO.getAllActiveServices();
+                List<Staff> staff = staffDAO.getActiveStaff();
+                BookingDAO bookingDAO2 = new BookingDAO();
+                List<Shift> availableShifts = bookingDAO2.getAllShifts();
+
+                request.setAttribute("services", services);
+                request.setAttribute("staff", staff);
+                request.setAttribute("availableShifts", availableShifts);
+
+                request.setAttribute("error", "Đặt lịch không thành công do stylist đã có lịch vào khung giờ này. Bạn có thể chọn stylist khác hoặc khung thời gian khác.");
                 request.getRequestDispatcher("BookingForm.jsp").forward(request, response);
                 return;
             }
@@ -97,16 +112,19 @@ public class BookingController extends HttpServlet {
             booking.setShiftsId(shiftId);
             booking.setBookingDate(bookingDate);
             booking.setNote(note);
+            booking.setStatus("Confirmed");
             
             if (bookingDAO.createBooking(booking)) {
-                request.setAttribute("success", "\u0110\u1EB7t l\u1ECBch th\u00E0nh c\u00F4ng! Ch\u00FAng t\u00F4i s\u1EBD x\u00E1c nh\u1EADn s\u1EDBm.");
+                // Create notification for admin (optional, có thể bỏ qua nếu không cần)
+                // ...
+                request.setAttribute("success", "Đặt lịch thành công! Lịch của bạn đã được xác nhận.");
                 request.getRequestDispatcher("BookingSuccess.jsp").forward(request, response);
             } else {
-                request.setAttribute("error", "\u0110\u1EB7t l\u1ECBch th\u1EA5t b\u1EA1i. Vui l\u00F2ng th\u1EED l\u1EA1i.");
+                request.setAttribute("error", "Đặt lịch thất bại. Vui lòng thử lại.");
                 request.getRequestDispatcher("BookingForm.jsp").forward(request, response);
             }
         } catch (Exception e) {
-            request.setAttribute("error", "D\u1EEF li\u1EC7u kh\u00F4ng h\u1EE3p l\u1EC7! L\u1ED7i: " + e.getMessage());
+            request.setAttribute("error", "Dữ liệu không hợp lệ! Lỗi: " + e.getMessage());
             request.getRequestDispatcher("BookingForm.jsp").forward(request, response);
         }
     }
@@ -127,7 +145,7 @@ public class BookingController extends HttpServlet {
                 out.println("<body>");
                 out.println("<h1>Lỗi khi tải lịch hẹn</h1>");
                 out.println("<p>Lỗi: " + e.getMessage() + "</p>");
-                out.println("<a href='home'>Về Trang Chủ</a>");
+                out.println("<a href='home'>Ve Trang Chu</a>");
                 out.println("</body>");
                 out.println("</html>");
             }
@@ -210,7 +228,7 @@ public class BookingController extends HttpServlet {
                 out.println("<body>");
                 out.println("<h1>Error in BookingController</h1>");
                 out.println("<p>Error: " + e.getMessage() + "</p>");
-                out.println("<a href='home'>Back to Home</a>");
+                out.println("<a href='home'>Ve Trang Chu</a>");
                 out.println("</body>");
                 out.println("</html>");
             }
@@ -306,7 +324,7 @@ public class BookingController extends HttpServlet {
                 out.println("<body>");
                 out.println("<h1>Error in BookingController Debug</h1>");
                 out.println("<p>Error: " + e.getMessage() + "</p>");
-                out.println("<a href='home'>Back to Home</a>");
+                out.println("<a href='home'>Ve Trang Chu</a>");
                 out.println("</body>");
                 out.println("</html>");
             }

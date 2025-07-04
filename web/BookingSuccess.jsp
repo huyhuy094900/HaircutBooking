@@ -67,6 +67,13 @@
                             </div>
                         </c:if>
                         
+                        <c:if test="${not empty warning}">
+                            <div class="alert alert-warning border-0 bg-warning bg-opacity-10">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                ${warning}
+                            </div>
+                        </c:if>
+                        
                         <c:if test="${not empty error}">
                             <div class="alert alert-danger border-0 bg-danger bg-opacity-10">
                                 <i class="bi bi-exclamation-triangle me-2"></i>

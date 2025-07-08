@@ -17,29 +17,35 @@ public class StaffDashboardController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        HttpSession session = request.getSession();
-        Staff staff = (Staff) session.getAttribute("staff");
-        
-        // Check if staff is logged in
-        if (staff == null) {
-            response.sendRedirect("StaffLoginController");
-            return;
-        }
-        
-        String action = request.getParameter("action");
-        
-        if (action == null || action.trim().isEmpty()) {
-            showDashboard(request, response, staff);
-        } else if ("viewBookings".equals(action)) {
-            showBookings(request, response, staff);
-        } else if ("viewTodayBookings".equals(action)) {
-            showTodayBookings(request, response, staff);
-        } else if ("updateStatus".equals(action)) {
-            updateBookingStatus(request, response, staff);
-        } else {
-            showDashboard(request, response, staff);
+        try {
+            response.setContentType("text/html;charset=UTF-8");
+            
+            HttpSession session = request.getSession();
+            Staff staff = (Staff) session.getAttribute("staff");
+            
+            // Check if staff is logged in
+            if (staff == null) {
+                request.setAttribute("error", "Phiên đăng nhập đã hết hạn hoặc chưa đăng nhập. Vui lòng đăng nhập lại!");
+                request.getRequestDispatcher("StaffLogin.jsp").forward(request, response);
+                return;
+            }
+            
+            String action = request.getParameter("action");
+            
+            if (action == null || action.trim().isEmpty()) {
+                showDashboard(request, response, staff);
+            } else if ("viewBookings".equals(action)) {
+                showBookings(request, response, staff);
+            } else if ("viewTodayBookings".equals(action)) {
+                showTodayBookings(request, response, staff);
+            } else if ("updateStatus".equals(action)) {
+                updateBookingStatus(request, response, staff);
+            } else {
+                showDashboard(request, response, staff);
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Đã xảy ra lỗi: " + e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 
@@ -51,24 +57,15 @@ public class StaffDashboardController extends HttpServlet {
 
     private void showBookings(HttpServletRequest request, HttpServletResponse response, Staff staff)
             throws ServletException, IOException {
-        
-        try {
-            BookingDAO bookingDAO = new BookingDAO();
-            List<Booking> allBookings = bookingDAO.getBookingsByStaff(staff.getStaffId());
-            
-            // Debug: Print to console
-            System.out.println("Staff ID: " + staff.getStaffId());
-            System.out.println("All bookings count: " + (allBookings != null ? allBookings.size() : "null"));
-            
-            request.setAttribute("staff", staff);
-            request.setAttribute("allBookings", allBookings);
-            request.setAttribute("bookingCount", allBookings != null ? allBookings.size() : 0);
-            
-            request.getRequestDispatcher("StaffBookings.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error loading bookings: " + e.getMessage());
+        BookingDAO bookingDAO = new BookingDAO();
+        List<Booking> allBookings = bookingDAO.getBookingsByStaff(staff.getStaffId());
+        if (allBookings == null) {
+            allBookings = new java.util.ArrayList<>();
         }
+        request.setAttribute("staff", staff);
+        request.setAttribute("allBookings", allBookings);
+        request.setAttribute("bookingCount", allBookings.size());
+        request.getRequestDispatcher("StaffBookings.jsp").forward(request, response);
     }
 
     private void showTodayBookings(HttpServletRequest request, HttpServletResponse response, Staff staff)

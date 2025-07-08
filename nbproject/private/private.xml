@@ -5,23 +5,31 @@
         <group>
             <file>file:/D:/sehuy/HaircutBooking/web/HeaderInclude.jsp</file>
             <file>file:/D:/sehuy/HaircutBooking/web/StaffBookings.jsp</file>
-            <file>file:/D:/sehuy/HaircutBooking/web/WEB-INF/web.xml</file>
-            <file>file:/D:/sehuy/HaircutBooking/web/StaffTodayBookings.jsp</file>
-            <file>file:/D:/sehuy/HaircutBooking/web/StaffLogin.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/Staff.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/StaffLoginController.java</file>
-            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/UserDetailForAdminController.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/StaffBookingsController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/Service.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/RegisterController.java</file>
             <file>file:/D:/sehuy/HaircutBooking/web/BookingSuccess.jsp</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/UnbanUserController.java</file>
-            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/LoginController.java</file>
-            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/TestLoginController.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/SimpleBookingController.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/LogoutController.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/StaffDashboardController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/Booking.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/ResetPasswordController.java</file>
             <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/BookingController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/web/WEB-INF/web.xml</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/web/StaffTodayBookings.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/web/StaffLogin.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/Shift.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/UserDetailForAdminController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/DAO/BookingDAO.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/LoginController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/TestLoginController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/Notification.java</file>
             <file>file:/D:/sehuy/HaircutBooking/web/test_booking_debug.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/User.java</file>
         </group>
     </open-files>
 </project-private>

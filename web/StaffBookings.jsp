@@ -60,6 +60,14 @@
     </style>
 </head>
 <body>
+<% 
+    out.println("DEBUG: staff=" + request.getAttribute("staff"));
+    out.println("DEBUG: allBookings=" + request.getAttribute("allBookings"));
+    out.println("DEBUG: error=" + request.getAttribute("error"));
+%>
+<c:if test="${not empty error}">
+    <div class="alert alert-danger">${error}</div>
+</c:if>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -185,24 +193,44 @@
                                                     <i class="bi bi-person"></i>
                                                 </div>
                                                 <div>
-                                                    <strong>${booking.user.fullName}</strong>
-                                                    <br>
-                                                    <small class="text-muted">${booking.user.email}</small>
+                                                    <c:choose>
+                                                        <c:when test="${not empty booking.user}">
+                                                            <strong>${booking.user.fullName}</strong>
+                                                        </c:when>
+                                                        <c:otherwise>N/A</c:otherwise>
+                                                    </c:choose><br>
+                                                    <c:choose>
+                                                        <c:when test="${not empty booking.user}">
+                                                            <small class="text-muted">${booking.user.email}</small>
+                                                        </c:when>
+                                                        <c:otherwise><small class="text-muted">N/A</small></c:otherwise>
+                                                    </c:choose>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-info">
-                                                <i class="bi bi-scissors"></i>
-                                                ${booking.service.name}
-                                            </span>
+                                            <c:choose>
+                                                <c:when test="${not empty booking.service}">
+                                                    <span class="badge bg-info"><i class="bi bi-scissors"></i> ${booking.service.name}</span>
+                                                </c:when>
+                                                <c:otherwise><span class="badge bg-secondary">N/A</span></c:otherwise>
+                                            </c:choose>
                                         </td>
                                         <td>
-                                            <strong>${booking.bookingDate}</strong>
+                                            <c:choose>
+                                                <c:when test="${not empty booking.bookingDate}">
+                                                    <strong>${booking.bookingDate}</strong>
+                                                </c:when>
+                                                <c:otherwise>N/A</c:otherwise>
+                                            </c:choose>
                                         </td>
                                         <td>
-                                            <i class="bi bi-clock"></i>
-                                            ${booking.shift.startTime} - ${booking.shift.endTime}
+                                            <c:choose>
+                                                <c:when test="${not empty booking.shift}">
+                                                    <i class="bi bi-clock"></i> ${booking.shift.startTime} - ${booking.shift.endTime}
+                                                </c:when>
+                                                <c:otherwise>N/A</c:otherwise>
+                                            </c:choose>
                                         </td>
                                         <td>
                                             <span class="badge status-badge 
@@ -236,9 +264,9 @@
                                                         <i class="bi bi-check-circle"></i>
                                                     </button>
                                                 </c:if>
-                                                <button class="btn btn-info btn-sm" onclick="viewDetails(${booking.bookingId})" title="Xem chi tiết">
+                                                <a class="btn btn-info btn-sm" href="BookingDetailController?id=${booking.bookingId}" title="Xem chi tiết">
                                                     <i class="bi bi-eye"></i>
-                                                </button>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>

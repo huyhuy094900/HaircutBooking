@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +26,7 @@
                             <div class="mb-2">
                                 <strong>ID:</strong> ${service.serviceId} | 
                                 <strong>Name:</strong> ${service.name} | 
-                                <strong>Price:</strong> ${service.price}₫
+                                <strong>Price:</strong> <fmt:formatNumber value="${service.price}" type="number" groupingUsed="true" /> VND
                             </div>
                         </c:forEach>
                         

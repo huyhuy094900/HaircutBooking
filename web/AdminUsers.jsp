@@ -225,6 +225,10 @@
     </style>
 </head>
 <body>
+<c:if test="${not empty sessionScope.msg}">
+    <div class="alert alert-success" style="margin: 20px auto; width: 60%; text-align: center;">${sessionScope.msg}</div>
+    <c:remove var="msg" scope="session"/>
+</c:if>
     <jsp:include page="AdminHeader.jsp"/>
     
     <!-- Admin Header -->
@@ -368,18 +372,14 @@
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                             <c:if test="${user.userStatus && !user.admin}">
-                                                <a href="ban_user?userID=${user.userId}" 
-                                                   class="btn btn-sm btn-warning" title="Ban user"
-                                                   onclick="return confirm('Bạn có chắc muốn ban user này?')">
+                                                <button type="button" class="btn btn-sm btn-warning" title="Ban user" onclick="banUser(${user.userId}, this)">
                                                     <i class="bi bi-person-x"></i>
-                                                </a>
+                                                </button>
                                             </c:if>
                                             <c:if test="${!user.userStatus && !user.admin}">
-                                                <a href="unban_user?userID=${user.userId}" 
-                                                   class="btn btn-sm btn-success" title="Unban user"
-                                                   onclick="return confirm('Bạn có chắc muốn unban user này?')">
+                                                <button type="button" class="btn btn-sm btn-success" title="Unban user" onclick="unbanUser(${user.userId}, this)">
                                                     <i class="bi bi-person-check"></i>
-                                                </a>
+                                                </button>
                                             </c:if>
                                         </div>
                                     </td>
@@ -434,6 +434,49 @@
                 document.querySelector('a[href="admin?action=users"]').classList.add('active');
             }
         });
+
+        function banUser(userId, btn) {
+            fetch('ban_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+                body: 'userID=' + encodeURIComponent(userId)
+            })
+            .then(response => response.text())
+            .then(msg => {
+                alert(msg);
+                // Đổi trạng thái trên bảng
+                const row = btn.closest('tr');
+                const statusBadge = row.querySelector('.badge.bg-success, .badge.bg-danger');
+                if (statusBadge) {
+                    statusBadge.classList.remove('bg-success');
+                    statusBadge.classList.add('bg-danger');
+                    statusBadge.innerHTML = '<i class="bi bi-x-circle"></i> Inactive';
+                }
+                // Đổi nút Ban thành Unban
+                btn.outerHTML = `<button type=\"button\" class=\"btn btn-sm btn-success\" title=\"Unban user\" onclick=\"unbanUser(${userId}, this)\"><i class=\"bi bi-person-check\"></i></button>`;
+            });
+        }
+        function unbanUser(userId, btn) {
+            fetch('unban_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+                body: 'userID=' + encodeURIComponent(userId)
+            })
+            .then(response => response.text())
+            .then(msg => {
+                alert(msg);
+                // Đổi trạng thái trên bảng
+                const row = btn.closest('tr');
+                const statusBadge = row.querySelector('.badge.bg-danger, .badge.bg-success');
+                if (statusBadge) {
+                    statusBadge.classList.remove('bg-danger');
+                    statusBadge.classList.add('bg-success');
+                    statusBadge.innerHTML = '<i class="bi bi-check-circle"></i> Active';
+                }
+                // Đổi nút Unban thành Ban
+                btn.outerHTML = `<button type="button" class="btn btn-sm btn-warning" title="Ban user" onclick="banUser(${userId}, this)"><i class="bi bi-person-x"></i></button>`;
+            });
+        }
     </script>
 </body>
 </html> 

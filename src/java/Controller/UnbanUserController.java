@@ -29,12 +29,15 @@ public class UnbanUserController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            DaoUser daoUser = new DaoUser();
-            int id = Integer.parseInt(request.getParameter("id"));
-            daoUser.unbanUser(id);
+        DaoUser daoUser = new DaoUser();
+        int id = Integer.parseInt(request.getParameter("userID"));
+        daoUser.unbanUser(id);
+        String requestedWith = request.getHeader("X-Requested-With");
+        if (requestedWith != null && requestedWith.equals("XMLHttpRequest")) {
+            response.setContentType("text/plain;charset=UTF-8");
+            response.getWriter().write("Unban user thành công!");
+        } else {
+            request.getSession().setAttribute("msg", "Unban user thành công!");
             response.sendRedirect("list_user");
         }
     }

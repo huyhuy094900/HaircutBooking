@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,7 +105,7 @@
             <div class="col-md-3">
                 <div class="stats-card">
                     <i class="bi bi-currency-dollar" style="font-size: 3rem; color: #17a2b8;"></i>
-                    <h3>$${totalRevenue}</h3>
+                    <h3><fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true" /> VND</h3>
                     <p class="text-muted">Tổng doanh thu</p>
                 </div>
             </div>
@@ -135,7 +136,7 @@
                     <select class="form-select" id="serviceFilter">
                         <option value="">Tất cả dịch vụ</option>
                         <c:forEach items="${allServices}" var="service">
-                            <option value="${service.serviceId}">${service.name}</option>
+                            <option value="${service.serviceId}">${service.name} - <fmt:formatNumber value="${service.price}" type="number" groupingUsed="true" /> VND</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -227,7 +228,7 @@
                                 <td>
                                     <span class="badge bg-success">
                                         <i class="bi bi-currency-dollar"></i>
-                                        $${booking.service.price != null ? booking.service.price : '0'}
+                                        <fmt:formatNumber value="${booking.service.price}" type="number" groupingUsed="true" /> VND
                                     </span>
                                 </td>
                                 <td>
@@ -336,7 +337,7 @@
                                     <select class="form-select" id="serviceSelect" required>
                                         <option value="">Chọn dịch vụ</option>
                                         <c:forEach items="${allServices}" var="service">
-                                            <option value="${service.serviceId}">${service.name} - $${service.price}</option>
+                                            <option value="${service.serviceId}">${service.name} - <fmt:formatNumber value="${service.price}" type="number" groupingUsed="true" /> VND</option>
                                         </c:forEach>
                                     </select>
                                 </div>

@@ -4,6 +4,7 @@
     Author     : sontu
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -99,7 +100,7 @@
                                         <h3>Thời gian làm:</h3>
                                         <p>${PostDetail.timeDuration}</p>
                                         <h3>Lương:</h3>
-                                        <p>${PostDetail.salary}VND</p>
+                                        <p><fmt:formatNumber value="${PostDetail.salary}" type="number" groupingUsed="true" /> VND</p>
                                         <h3>Yêu cầu(cho nhân công):</h3>
                                         <p>${PostDetail.requirements}</p>
                                     </div><!-- End post content -->

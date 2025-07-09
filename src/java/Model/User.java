@@ -24,6 +24,7 @@ public class User {
     private boolean isAdmin;
     private boolean userStatus;
     private Timestamp createdAt;
+    private String banReason;
     
 
     // getter + setter
@@ -100,6 +101,10 @@ public class User {
         this.address = address;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -122,6 +127,13 @@ public class User {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getBanReason() {
+        return banReason;
+    }
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
     }
 }
 

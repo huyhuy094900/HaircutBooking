@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -240,7 +241,7 @@
                             <div class="col-md-6">
                                 <div class="stats-card revenue text-center">
                                     <i class="bi bi-currency-dollar stats-icon"></i>
-                                    <h3>$${totalRevenue}</h3>
+                                    <h3><fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true" /> VND</h3>
                                     <p class="text-muted">Doanh thu tháng này</p>
                                 </div>
                             </div>
@@ -415,7 +416,7 @@
                                                 <tr>
                                                     <td>${service.serviceId}</td>
                                                     <td>${service.name}</td>
-                                                    <td>$${service.price}</td>
+                                                    <td><fmt:formatNumber value="${service.price}" type="number" groupingUsed="true" /> VND</td>
                                                     <td>${service.duration} phút</td>
                                                     <td>
                                                         <span class="badge ${service.serviceStatus ? 'bg-success' : 'bg-danger'}">

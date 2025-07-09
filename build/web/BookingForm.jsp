@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -97,7 +98,7 @@
                                 <c:forEach var="service" items="${services}">
                                     <option value="${service.serviceId}" 
                                             ${param.serviceId == service.serviceId ? 'selected' : ''}>
-                                        ${service.name} (${service.price}₫, ${service.duration} phút)
+                                        ${service.name} (<fmt:formatNumber value="${service.price}" type="number" groupingUsed="true" /> VND, ${service.duration} phút)
                                     </option>
                                 </c:forEach>
                             </select>

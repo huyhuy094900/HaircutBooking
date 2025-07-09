@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -85,6 +86,18 @@
             background: linear-gradient(90deg, #0056b3, #007bff);
             color: #fff;
             box-shadow: 0 8px 24px rgba(0,123,255,0.18);
+        }
+        .service-img img {
+            max-height: 220px;
+            object-fit: cover;
+            width: 100%;
+            border-radius: 18px 18px 0 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+        }
+        .service-img img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 32px rgba(44,62,80,0.18);
         }
         @media (max-width: 768px) {
             .service-header h1 { font-size: 2rem; }
@@ -181,22 +194,23 @@
                 <c:otherwise>
                     <c:forEach var="service" items="${services}">
                         <div class="col-md-6 col-lg-4">
-                            <div class="card service-card h-100">
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <div>
-                                        <div class="service-icon text-center mb-2">
-                                            <i class="bi bi-scissors"></i>
-                                        </div>
-                                        <div class="service-title mb-2 text-center">${service.name}</div>
-                                        <div class="service-desc mb-3 text-center">${service.description}</div>
-                                        <div class="service-meta justify-content-center d-flex mb-2">
-                                            <span><i class="bi bi-clock"></i> ${service.duration} phút</span>
-                                            <span class="service-price"><i class="bi bi-currency-dollar"></i> ${service.price}</span>
-                                        </div>
+                            <div class="card service-card h-100 p-0 overflow-hidden">
+                                <div class="service-img text-center" style="background:#f8f9fa;">
+                                    <img src="${pageContext.request.contextPath}/assets/img/${service.image}"
+                                         alt="${service.name}"
+                                         class="img-fluid"
+                                         onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/img/default-service.jpg';">
+                                </div>
+                                <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                    <div class="service-title mb-2 text-center" style="font-size:1.3rem;font-weight:600;color:#2c3e50;">${service.name}</div>
+                                    <div class="service-desc mb-3 text-center" style="color:#6c757d;font-size:1rem;min-height:48px;">${service.description}</div>
+                                    <div class="service-meta d-flex flex-column align-items-center mb-2">
+                                        <span style="color:#495057;"><i class="bi bi-clock"></i> ${service.duration} phút</span>
+                                        <span class="service-price mt-2" style="font-weight:bold;color:#212529;font-size:1.2rem;">Giá tiêu chuẩn<br><fmt:formatNumber value="${service.price}" type="number" groupingUsed="true" /> VND</span>
                                     </div>
-                                    <div class="d-flex justify-content-center mt-2">
-                                        <a href="BookingController" class="btn btn-book w-100"><i class="bi bi-calendar-check me-1"></i>Đặt lịch</a>
-                                    </div>
+                                    <a href="BookingController" class="btn btn-book w-100 mt-2" style="background:linear-gradient(90deg,#007bff,#00c6ff);color:#fff;font-weight:600;font-size:1rem;border-radius:25px;">
+                                        <i class="bi bi-calendar-check me-1"></i>Chọn
+                                    </a>
                                 </div>
                             </div>
                         </div>

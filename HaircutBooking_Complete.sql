@@ -27,7 +27,8 @@ CREATE TABLE Users (
     address VARCHAR(255),
     is_Admin BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    user_status BOOLEAN DEFAULT FALSE
+    user_status BOOLEAN DEFAULT FALSE,
+    ban_reason TEXT
 );
 
 -- Create Services table
@@ -90,30 +91,29 @@ CREATE TABLE ActivityLogs (
 );
 
 -- Insert Admin User
-INSERT INTO Users (user_name, full_name, email, password, phone, gender, birth_date, address, is_Admin, user_status) 
+INSERT INTO Users (user_name, full_name, email, password, phone, gender, birth_date, address, is_Admin, user_status, ban_reason) 
 VALUES 
-('admin', 'System Administrator', 'admin@haircut.com', 'admin123', '0909123456', 'Male', '1990-01-01', '123 Admin Street', TRUE, TRUE);
+('admin', 'System Administrator', 'admin@haircut.com', 'admin123', '0909123456', 'Male', '1990-01-01', '123 Admin Street', TRUE, TRUE, NULL);
 
 -- Insert Regular Users
-INSERT INTO Users (user_name, full_name, email, password, phone, gender, birth_date, address, is_Admin, user_status) 
+INSERT INTO Users (user_name, full_name, email, password, phone, gender, birth_date, address, is_Admin, user_status, ban_reason) 
 VALUES 
-('john123', 'John Doe', 'john@example.com', 'password123', '0909123457', 'Male', '1990-05-15', '123 ABC Street', FALSE, TRUE),
-('anna456', 'Anna Smith', 'anna@example.com', 'password123', '0911223344', 'Female', '1995-08-20', '456 XYZ Avenue', FALSE, TRUE),
-('mike789', 'Mike Johnson', 'mike@example.com', 'password123', '0999888777', 'Male', '1988-12-10', '789 Main Road', FALSE, TRUE),
-('lisa321', 'Lisa Brown', 'lisa@example.com', 'password123', '0987654321', 'Female', '1992-03-25', '321 Oak Lane', FALSE, TRUE);
+('john123', 'John Doe', 'john@example.com', 'password123', '0909123457', 'Male', '1990-05-15', '123 ABC Street', FALSE, TRUE, NULL),
+('anna456', 'Anna Smith', 'anna@example.com', 'password123', '0911223344', 'Female', '1995-08-20', '456 XYZ Avenue', FALSE, TRUE, NULL),
+('mike789', 'Mike Johnson', 'mike@example.com', 'password123', '0999888777', 'Male', '1988-12-10', '789 Main Road', FALSE, TRUE, NULL),
+('lisa321', 'Lisa Brown', 'lisa@example.com', 'password123', '0987654321', 'Female', '1992-03-25', '321 Oak Lane', FALSE, TRUE, NULL);
 
 -- Insert Services
 INSERT INTO Services (name, description, duration, price, image, service_status) 
 VALUES 
-('Cắt tóc nam', 'Dịch vụ cắt tóc chuyên nghiệp cho nam giới với nhiều kiểu tóc hiện đại', 30, 100000, 'haircut-male.jpg', TRUE),
-('Cắt tóc nữ', 'Dịch vụ cắt tóc và tạo kiểu cho nữ giới', 45, 150000, 'haircut-female.jpg', TRUE),
-('Gội đầu massage', 'Thư giãn với gội đầu và massage da đầu chuyên nghiệp', 30, 80000, 'shampoo-massage.jpg', TRUE),
-('Nhuộm tóc', 'Dịch vụ nhuộm tóc với nhiều màu sắc đẹp', 90, 300000, 'hair-dye.jpg', TRUE),
-('Uốn tóc', 'Dịch vụ uốn tóc tạo kiểu', 120, 400000, 'hair-curling.jpg', TRUE),
-('Chăm sóc da mặt', 'Dịch vụ chăm sóc và làm sạch da mặt', 60, 250000, 'facial.jpg', TRUE),
-('Làm móng tay', 'Dịch vụ làm móng tay và sơn gel', 45, 120000, 'nail-art.jpg', TRUE),
-('Tẩy tế bào chết', 'Dịch vụ tẩy tế bào chết toàn thân', 60, 200000, 'body-scrub.jpg', TRUE);
-
+('Cắt tóc nam', 'Dịch vụ cắt tóc chuyên nghiệp cho nam giới với nhiều kiểu tóc hiện đại', 30, 100000, 'blog/blog-1.jpg', TRUE),
+('Cắt tóc nữ', 'Dịch vụ cắt tóc và tạo kiểu cho nữ giới', 45, 150000, 'blog/blog-2.jpg', TRUE),
+('Gội đầu massage', 'Thư giãn với gội đầu và massage da đầu chuyên nghiệp', 30, 80000, 'blog/blog-3.jpg', TRUE),
+('Nhuộm tóc', 'Dịch vụ nhuộm tóc với nhiều màu sắc đẹp', 90, 300000, 'blog/blog-4.jpg', TRUE),
+('Uốn tóc', 'Dịch vụ uốn tóc tạo kiểu', 120, 400000, 'blog/blog-5.jpg', TRUE),
+('Chăm sóc da mặt', 'Dịch vụ chăm sóc và làm sạch da mặt', 60, 250000, 'blog/blog-6.jpg', TRUE),
+('Làm móng tay', 'Dịch vụ làm móng tay và sơn gel', 45, 120000, 'blog/blog-1.jpg', TRUE),
+('Tẩy tế bào chết', 'Dịch vụ tẩy tế bào chết toàn thân', 60, 200000, 'blog/blog-2.jpg', TRUE);
 -- Insert Staff
 INSERT INTO Staff (staff_name, staff_email, password, staff_image, staff_status) 
 VALUES 
@@ -192,22 +192,4 @@ SELECT name, price, duration FROM Services WHERE service_status = TRUE;
 SELECT '=== AVAILABLE STAFF ===' as Info;
 SELECT staff_name, staff_email FROM Staff WHERE staff_status = TRUE;
 
--- Test ngay bây giờ
-SELECT * FROM Users ORDER BY created_at DESC LIMIT 5;
 
--- Update password cho user "hue"
-UPDATE Users 
-SET password = 'newpassword123' 
-WHERE user_name = 'hue'; 
-
--- Kết nối MySQL
-mysql -u root -p
-USE HaircutBooking;
-
--- Tìm user "hue"
-SELECT user_id, user_name, full_name, email, password, user_status, is_Admin 
-FROM Users 
-WHERE user_name = 'hue';
-
--- Hoặc tìm theo email
-SELECT * FROM Users WHERE email LIKE '%hue%'; 

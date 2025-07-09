@@ -29,6 +29,7 @@ public class DaoUser extends DBContext {
                     u.setAdmin(rs.getBoolean("is_Admin"));
                     u.setCreatedAt(rs.getTimestamp("created_at"));
                     u.setUserStatus(rs.getBoolean("user_status"));
+                    u.setBanReason(rs.getString("ban_reason"));
                     return u;
                 }
             }
@@ -88,10 +89,11 @@ public class DaoUser extends DBContext {
         return false;
     }
 
-    public boolean banUser(int userId) {
-        String sql = "UPDATE Users SET user_status = FALSE WHERE user_id = ?";
+    public boolean banUser(int userId, String banReason) {
+        String sql = "UPDATE Users SET user_status = FALSE, ban_reason = ? WHERE user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
+            ps.setString(1, banReason);
+            ps.setInt(2, userId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,7 +102,7 @@ public class DaoUser extends DBContext {
     }
 
     public boolean unbanUser(int userId) {
-        String sql = "UPDATE Users SET user_status = TRUE WHERE user_id = ?";
+        String sql = "UPDATE Users SET user_status = TRUE, ban_reason = NULL WHERE user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             return ps.executeUpdate() > 0;
@@ -129,6 +131,7 @@ public class DaoUser extends DBContext {
                 u.setAdmin(rs.getBoolean("is_Admin"));
                 u.setCreatedAt(rs.getTimestamp("created_at"));
                 u.setUserStatus(rs.getBoolean("user_status"));
+                u.setBanReason(rs.getString("ban_reason"));
                 list.add(u);
             }
         } catch (SQLException e) {
@@ -156,6 +159,7 @@ public class DaoUser extends DBContext {
                     u.setAdmin(rs.getBoolean("is_Admin"));
                     u.setCreatedAt(rs.getTimestamp("created_at"));
                     u.setUserStatus(rs.getBoolean("user_status"));
+                    u.setBanReason(rs.getString("ban_reason"));
                     return u;
                 }
             }

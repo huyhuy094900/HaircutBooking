@@ -49,7 +49,12 @@ public class LoginController extends HttpServlet {
                 return;
             } else if (!u.isUserStatus()) {
                 System.out.println("Login failed - User banned");
-                request.setAttribute("mess", "Tài khoản đã bị cấm!");
+                String reason = u.getBanReason();
+                String msg = "Tài khoản đã bị cấm!";
+                if (reason != null && !reason.trim().isEmpty()) {
+                    msg += " Lý do: " + reason;
+                }
+                request.setAttribute("mess", msg);
                 request.getRequestDispatcher("Login.jsp").forward(request, response);
                 return;
             }

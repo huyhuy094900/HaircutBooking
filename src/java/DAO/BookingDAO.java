@@ -340,4 +340,58 @@ public class BookingDAO extends DBContext {
         }
         return availableStylists;
     }
+
+    // Method moi: lay danh sach booking theo staff_id
+    public List<Booking> getBookingsByStaff(int staffId) {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
+                    "FROM Bookings b " +
+                    "JOIN Users u ON b.user_id = u.user_id " +
+                    "JOIN Services s ON b.service_id = s.service_id " +
+                    "JOIN Staff st ON b.staff_id = st.staff_id " +
+                    "JOIN Shifts sh ON b.shifts_id = sh.shifts_id " +
+                    "WHERE b.staff_id = ? ORDER BY b.booking_date DESC, sh.start_time ASC";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    bookings.add(booking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (bookings == null) {
+            bookings = new ArrayList<>();
+        }
+        return bookings;
+    }
+
+    // Method moi: lay danh sach booking theo staff_id va ngay cu the
+    public List<Booking> getBookingsByStaffAndDate(int staffId, Date bookingDate) {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
+                    "FROM Bookings b " +
+                    "JOIN Users u ON b.user_id = u.user_id " +
+                    "JOIN Services s ON b.service_id = s.service_id " +
+                    "JOIN Staff st ON b.staff_id = st.staff_id " +
+                    "JOIN Shifts sh ON b.shifts_id = sh.shifts_id " +
+                    "WHERE b.staff_id = ? AND b.booking_date = ? ORDER BY sh.start_time ASC";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ps.setDate(2, bookingDate);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    bookings.add(booking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
 } 

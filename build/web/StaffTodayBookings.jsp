@@ -111,6 +111,9 @@
                 <a href="StaffDashboardController?action=viewBookings" class="btn btn-primary">
                     <i class="bi bi-calendar3"></i> Tất cả lịch hẹn
                 </a>
+                <button class="btn btn-danger ms-2 fw-bold shadow-sm px-4 py-2" style="font-size:1.1rem;letter-spacing:0.5px;" data-bs-toggle="modal" data-bs-target="#dayOffModal">
+                    <i class="bi bi-moon-stars"></i> Xin nghỉ
+                </button>
             </div>
         </div>
 
@@ -385,6 +388,35 @@
                 </c:if>
             </div>
         </div>
+    </div>
+
+    <!-- Modal xin nghỉ -->
+    <div class="modal fade" id="dayOffModal" tabindex="-1" aria-labelledby="dayOffModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+          <form action="StaffDayOffController" method="post">
+            <div class="modal-header bg-danger text-white rounded-top-4">
+              <h5 class="modal-title" id="dayOffModalLabel"><i class="bi bi-moon-stars"></i> Xin nghỉ</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="off_date" class="form-label">Chọn ngày nghỉ:</label>
+                <input type="date" class="form-control" name="off_date" id="off_date" value="${todayDate}" min="${todayDate}" required>
+              </div>
+              <div class="mb-3">
+                <label for="reason" class="form-label">Lý do (tùy chọn):</label>
+                <input type="text" class="form-control" name="reason" id="reason" maxlength="255" placeholder="Ví dụ: Có việc gia đình, sức khỏe..."/>
+              </div>
+              <div class="alert alert-info small mb-0"><i class="bi bi-info-circle"></i> Khi gửi yêu cầu, admin sẽ duyệt trước khi lịch của bạn được hủy.</div>
+            </div>
+            <div class="modal-footer bg-light rounded-bottom-4">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="submit" class="btn btn-danger fw-bold px-4">Gửi yêu cầu nghỉ</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <!-- Bootstrap JS -->

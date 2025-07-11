@@ -56,6 +56,16 @@ public class BookingDAO extends DBContext {
         return false;
     }
 
+    public boolean cancelBookingWithNote(int bookingId, String note) {
+        String sql = "UPDATE Bookings SET status='Canceled', note=? WHERE booking_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, note);
+            ps.setInt(2, bookingId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
     public List<Booking> getBookingsByUser(int userId) {
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +

@@ -200,7 +200,7 @@
                                          alt="${service.name}"
                                          class="img-fluid"
                                          onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/img/default-service.jpg';">
-                                </div>
+                                        </div>
                                 <div class="card-body d-flex flex-column justify-content-between align-items-center">
                                     <div class="service-title mb-2 text-center" style="font-size:1.3rem;font-weight:600;color:#2c3e50;">${service.name}</div>
                                     <div class="service-desc mb-3 text-center" style="color:#6c757d;font-size:1rem;min-height:48px;">${service.description}</div>

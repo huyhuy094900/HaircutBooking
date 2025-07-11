@@ -11,6 +11,8 @@ public class Notification {
     private Timestamp createdAt;
     private Timestamp readAt;
     private int relatedBookingId; // ID của booking liên quan (nếu có)
+    private int userId;
+    private String content;
     
     // Reference objects
     private Booking relatedBooking;
@@ -104,6 +106,11 @@ public class Notification {
     public void setRelatedBooking(Booking relatedBooking) {
         this.relatedBooking = relatedBooking;
     }
+
+    public void setUserId(int userId) { this.userId = userId; }
+    public int getUserId() { return userId; }
+    public void setContent(String content) { this.content = content; }
+    public String getContent() { return content; }
     
     // Helper methods
     public boolean isUnread() {

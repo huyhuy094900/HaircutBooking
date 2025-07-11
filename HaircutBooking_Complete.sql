@@ -13,6 +13,8 @@ DROP TABLE IF EXISTS Staff;
 DROP TABLE IF EXISTS Shifts;
 DROP TABLE IF EXISTS Services;
 DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Notifications;
+DROP TABLE IF EXISTS StaffDayOffRequests;
 
 -- Create Users table
 CREATE TABLE Users (
@@ -29,6 +31,22 @@ CREATE TABLE Users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     user_status BOOLEAN DEFAULT FALSE,
     ban_reason TEXT
+);
+
+-- Create Notifications table
+CREATE TABLE Notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    title VARCHAR(255),
+    content TEXT NOT NULL,
+    type VARCHAR(50),
+    status VARCHAR(20) DEFAULT 'unread',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    read_at DATETIME NULL,
+    related_booking_id INT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (related_booking_id) REFERENCES Bookings(booking_id)
 );
 
 -- Create Services table
@@ -90,10 +108,30 @@ CREATE TABLE ActivityLogs (
     log_time DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create StaffDayOffRequests table
+CREATE TABLE StaffDayOffRequests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT NOT NULL,
+    off_date DATE NOT NULL,
+    reason VARCHAR(255),
+    status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    reviewed_at DATETIME,
+    reviewed_by INT, -- user_id của admin duyệt
+    FOREIGN KEY (staff_id) REFERENCES Staff(staff_id),
+    FOREIGN KEY (reviewed_by) REFERENCES Users(user_id)
+);
+
 -- Insert Admin User
 INSERT INTO Users (user_name, full_name, email, password, phone, gender, birth_date, address, is_Admin, user_status, ban_reason) 
 VALUES 
 ('admin', 'System Administrator', 'admin@haircut.com', 'admin123', '0909123456', 'Male', '1990-01-01', '123 Admin Street', TRUE, TRUE, NULL);
+
+-- Insert sample Notifications
+INSERT INTO Notifications (user_id, title, content, type, status, is_read) VALUES
+(2, 'Lịch hẹn mới', 'Bạn có lịch hẹn mới vào ngày 2025-01-20', 'appointment', 'unread', FALSE),
+(3, 'Lịch hẹn xác nhận', 'Lịch hẹn của bạn đã được xác nhận', 'appointment', 'unread', TRUE),
+(2, 'Dịch vụ hoàn thành', 'Dịch vụ của bạn đã hoàn thành. Cảm ơn bạn!', 'service', 'unread', FALSE);
 
 -- Insert Regular Users
 INSERT INTO Users (user_name, full_name, email, password, phone, gender, birth_date, address, is_Admin, user_status, ban_reason) 

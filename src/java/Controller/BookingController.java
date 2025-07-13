@@ -100,7 +100,7 @@ public class BookingController extends HttpServlet {
                 request.setAttribute("staff", staff);
                 request.setAttribute("availableShifts", availableShifts);
 
-                request.setAttribute("error", "Đặt lịch không thành công do stylist đã có lịch vào khung giờ này. Bạn có thể chọn stylist khác hoặc khung thời gian khác.");
+                request.setAttribute("error", "Booking failed because the stylist already has an appointment at this time slot. Please choose another stylist or time slot.");
                 request.getRequestDispatcher("BookingForm.jsp").forward(request, response);
                 return;
             }
@@ -115,16 +115,16 @@ public class BookingController extends HttpServlet {
             booking.setStatus("Confirmed");
             
             if (bookingDAO.createBooking(booking)) {
-                // Create notification for admin (optional, có thể bỏ qua nếu không cần)
+                // Create notification for admin (optional, can be skipped if not needed)
                 // ...
-                request.setAttribute("success", "Đặt lịch thành công! Lịch của bạn đã được xác nhận.");
+                request.setAttribute("success", "Booking successful! Your appointment has been confirmed.");
                 request.getRequestDispatcher("BookingSuccess.jsp").forward(request, response);
             } else {
-                request.setAttribute("error", "Đặt lịch thất bại. Vui lòng thử lại.");
+                request.setAttribute("error", "Booking failed. Please try again.");
                 request.getRequestDispatcher("BookingForm.jsp").forward(request, response);
             }
         } catch (Exception e) {
-            request.setAttribute("error", "Dữ liệu không hợp lệ! Lỗi: " + e.getMessage());
+            request.setAttribute("error", "Invalid data! Error: " + e.getMessage());
             request.getRequestDispatcher("BookingForm.jsp").forward(request, response);
         }
     }
@@ -141,11 +141,11 @@ public class BookingController extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
-                out.println("<head><title>Lỗi</title></head>");
+                out.println("<head><title>Error</title></head>");
                 out.println("<body>");
-                out.println("<h1>Lỗi khi tải lịch hẹn</h1>");
-                out.println("<p>Lỗi: " + e.getMessage() + "</p>");
-                out.println("<a href='home'>Ve Trang Chu</a>");
+                out.println("<h1>Error loading bookings</h1>");
+                out.println("<p>Error: " + e.getMessage() + "</p>");
+                out.println("<a href='home'>Back to Home</a>");
                 out.println("</body>");
                 out.println("</html>");
             }
@@ -159,15 +159,15 @@ public class BookingController extends HttpServlet {
             String reason = request.getParameter("reason");
             
             if (bookingDAO.cancelBooking(bookingId, reason)) {
-                request.setAttribute("success", "Hủy lịch hẹn thành công!");
+                request.setAttribute("success", "Booking cancelled successfully!");
             } else {
-                request.setAttribute("error", "Hủy lịch hẹn thất bại!");
+                request.setAttribute("error", "Failed to cancel booking!");
             }
             
             // Redirect back to bookings list
             response.sendRedirect("BookingController?action=list");
         } catch (Exception e) {
-            request.setAttribute("error", "ID lịch hẹn không hợp lệ!");
+            request.setAttribute("error", "Invalid booking ID!");
             response.sendRedirect("BookingController?action=list");
         }
     }
@@ -228,7 +228,7 @@ public class BookingController extends HttpServlet {
                 out.println("<body>");
                 out.println("<h1>Error in BookingController</h1>");
                 out.println("<p>Error: " + e.getMessage() + "</p>");
-                out.println("<a href='home'>Ve Trang Chu</a>");
+                out.println("<a href='home'>Back to Home</a>");
                 out.println("</body>");
                 out.println("</html>");
             }

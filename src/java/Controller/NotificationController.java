@@ -1,7 +1,4 @@
-// Nếu gặp lỗi import javax.servlet.* không resolve được:
-// 1. Đảm bảo đã add đúng thư viện servlet-api.jar vào classpath (thường nằm trong thư mục lib hoặc do server cung cấp)
-// 2. Nếu dùng Jakarta EE 9+ thì đổi lại thành jakarta.servlet.*
-// 3. Nếu vẫn lỗi, kiểm tra cấu hình IDE/project.
+// Controller for admin notifications.
 package Controller;
 
 import DAO.NotificationDAO;

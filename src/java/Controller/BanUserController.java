@@ -32,7 +32,7 @@ public class BanUserController extends HttpServlet {
             throws ServletException, IOException {
         DaoUser daoUser = new DaoUser();
         int id = Integer.parseInt(request.getParameter("userID"));
-        daoUser.banUser(id, ""); // Không cần lý do, truyền chuỗi rỗng
+        daoUser.banUser(id, ""); // No reason needed, pass empty string
         String requestedWith = request.getHeader("X-Requested-With");
         if (requestedWith != null && requestedWith.equals("XMLHttpRequest")) {
             response.setContentType("text/plain;charset=UTF-8");

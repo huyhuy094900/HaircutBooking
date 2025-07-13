@@ -31,56 +31,56 @@
 <body>
 <div class="container py-4">
     <h2 class="mb-4"><i class="bi bi-bell"></i> Quản lý thông báo gửi cho khách hàng</h2>
-    <c:if test="${unreadCount > 0}">
+                            <c:if test="${unreadCount > 0}">
         <div class="alert alert-info mb-4">
             <i class="bi bi-info-circle"></i> Có <b>${unreadCount}</b> thông báo chưa đọc.
-        </div>
-    </c:if>
-    <c:choose>
-        <c:when test="${empty notifications}">
-            <div class="empty-state">
+                        </div>
+                            </c:if>
+                        <c:choose>
+                            <c:when test="${empty notifications}">
+                                <div class="empty-state">
                 <i class="bi bi-bell-slash" style="font-size:3rem;"></i>
                 <div>Không có thông báo nào.</div>
-            </div>
-        </c:when>
-        <c:otherwise>
-            <c:forEach var="notification" items="${notifications}">
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach var="notification" items="${notifications}">
                 <div class="notification-card ${notification.status == 'unread' ? 'unread' : ''}">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <span class="notification-title">
                             <i class="bi bi-${notification.type == 'alert' ? 'exclamation-triangle' : (notification.type == 'appointment' ? 'calendar-check' : 'info-circle')}"></i>
-                            ${notification.title}
+                                                ${notification.title}
                         </span>
                         <span class="notification-time">
                             <c:out value="${notification.createdAt}"/>
                         </span>
-                    </div>
+                                        </div>
                     <div class="notification-content">
                         ${notification.content}
-                    </div>
-                    <c:if test="${notification.relatedBooking != null}">
+                                        </div>
+                                        <c:if test="${notification.relatedBooking != null}">
                         <div class="booking-info">
                             <b>Thông tin đặt lịch:</b><br>
                             Mã: ${notification.relatedBooking.bookingId} | Ngày: ${notification.relatedBooking.bookingDate} | Trạng thái: ${notification.relatedBooking.status}
-                        </div>
-                    </c:if>
-                    <div class="notification-actions">
-                        <c:if test="${notification.status == 'unread'}">
-                            <button class="btn btn-success btn-sm" onclick="markAsRead(${notification.notificationId})">
-                                <i class="bi bi-check"></i> Đã đọc
-                            </button>
-                        </c:if>
-                        <button class="btn btn-danger btn-sm" onclick="deleteNotification(${notification.notificationId})">
-                            <i class="bi bi-trash"></i> Xóa
-                        </button>
+                                            </div>
+                                        </c:if>
+                                        <div class="notification-actions">
+                                            <c:if test="${notification.status == 'unread'}">
+                                                <button class="btn btn-success btn-sm" onclick="markAsRead(${notification.notificationId})">
+                                                    <i class="bi bi-check"></i> Đã đọc
+                                                </button>
+                                            </c:if>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteNotification(${notification.notificationId})">
+                                                <i class="bi bi-trash"></i> Xóa
+                                            </button>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
-                </div>
-            </c:forEach>
-        </c:otherwise>
-    </c:choose>
-</div>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
 function markAsRead(id) {
     fetch('NotificationController?action=markAsRead&notificationId=' + id)
         .then(r => r.text())
@@ -92,7 +92,7 @@ function deleteNotification(id) {
             .then(r => r.text())
             .then(t => { if (t === 'success') location.reload(); });
     }
-}
-</script>
+            }
+    </script>
 </body>
 </html> 

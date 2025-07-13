@@ -44,7 +44,7 @@ public class StaffDashboardController extends HttpServlet {
                 showDashboard(request, response, staff);
             }
         } catch (Exception e) {
-            request.setAttribute("error", "Đã xảy ra lỗi: " + e.getMessage());
+            request.setAttribute("error", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }

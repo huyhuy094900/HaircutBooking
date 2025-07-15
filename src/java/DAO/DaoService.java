@@ -109,4 +109,46 @@ public class DaoService extends DBContext {
         }
         return null;
     }
+
+    public void addService(Service service) {
+        String sql = "INSERT INTO Services (name, description, duration, price, image, service_status, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, service.getName());
+            ps.setString(2, service.getDescription());
+            ps.setInt(3, service.getDuration());
+            ps.setBigDecimal(4, service.getPrice());
+            ps.setString(5, service.getImage()); // Nếu không có image, có thể để null
+            ps.setBoolean(6, service.isServiceStatus());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateService(Service service) {
+        String sql = "UPDATE Services SET name=?, description=?, duration=?, price=?, image=?, service_status=? WHERE service_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, service.getName());
+            ps.setString(2, service.getDescription());
+            ps.setInt(3, service.getDuration());
+            ps.setBigDecimal(4, service.getPrice());
+            ps.setString(5, service.getImage());
+            ps.setBoolean(6, service.isServiceStatus());
+            ps.setInt(7, service.getServiceId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setServiceStatus(int id, boolean status) {
+        String sql = "UPDATE Services SET service_status=? WHERE service_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setBoolean(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

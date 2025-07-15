@@ -29,16 +29,44 @@
         }
         .stats-card {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
+            border-radius: 32px;
+            padding: 48px 36px 36px 36px;
+            min-width: 260px;
+            box-shadow: 0 8px 32px rgba(40, 167, 69, 0.10), 0 1.5px 6px rgba(0,0,0,0.04);
+            border: 1.5px solid #e6f4ea;
+            transition: transform 0.18s, box-shadow 0.18s;
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .stats-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 16px 48px rgba(40, 167, 69, 0.18), 0 2px 8px rgba(0,0,0,0.06);
+            z-index: 2;
+        }
+        .stats-card .icon-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e6f4ea 0%, #f0fff7 100%);
+            margin: 0 auto 18px auto;
+        }
+        .stats-card i {
+            font-size: 2.6rem !important;
         }
         .stats-card h3 {
-            color: #28a745;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3.2rem;
+            margin: 10px 0 8px 0;
+            font-weight: 700;
+            color: #222;
+        }
+        .stats-card p {
+            font-size: 1.15rem;
+            color: #666;
+            margin-bottom: 0;
+            letter-spacing: 0.01em;
         }
         .search-box {
             background: white;
@@ -78,34 +106,27 @@
     
     <div class="container">
         <!-- Statistics -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <i class="bi bi-scissors" style="font-size: 3rem; color: #28a745;"></i>
-                    <h3>${serviceCount}</h3>
-                    <p class="text-muted">Tổng dịch vụ</p>
+        <div class="d-flex justify-content-center gap-4 mb-4 flex-wrap">
+            <div class="stats-card text-center">
+                <div class="icon-badge">
+                    <i class="bi bi-scissors" style="color: #28a745;"></i>
                 </div>
+                <h3>${serviceCount}</h3>
+                <p>Tổng dịch vụ</p>
             </div>
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <i class="bi bi-check-circle" style="font-size: 3rem; color: #28a745;"></i>
-                    <h3>${activeServiceCount}</h3>
-                    <p class="text-muted">Dịch vụ Active</p>
+            <div class="stats-card text-center">
+                <div class="icon-badge">
+                    <i class="bi bi-check-circle" style="color: #28a745;"></i>
                 </div>
+                <h3>${activeServiceCount}</h3>
+                <p>Dịch vụ Active</p>
             </div>
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <i class="bi bi-x-circle" style="font-size: 3rem; color: #dc3545;"></i>
-                    <h3>${inactiveServiceCount}</h3>
-                    <p class="text-muted">Dịch vụ Inactive</p>
+            <div class="stats-card text-center">
+                <div class="icon-badge">
+                    <i class="bi bi-x-circle" style="color: #dc3545;"></i>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <i class="bi bi-currency-dollar" style="font-size: 3rem; color: #ffc107;"></i>
-                    <h3>90,000 VND</h3>
-                    <p class="text-muted">Tổng doanh thu</p>
-                </div>
+                <h3>${inactiveServiceCount}</h3>
+                <p>Dịch vụ Inactive</p>
             </div>
         </div>
         
@@ -207,10 +228,6 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="service_detail?serviceId=${service.serviceId}" 
-                                           class="btn btn-sm btn-info" title="Xem chi tiết">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
                                         <button class="btn btn-sm btn-warning" 
                                                 onclick="editService(${service.serviceId})" title="Chỉnh sửa">
                                             <i class="bi bi-pencil"></i>
@@ -227,10 +244,6 @@
                                                 <i class="bi bi-play-circle"></i>
                                             </button>
                                         </c:if>
-                                        <button class="btn btn-sm btn-outline-secondary" 
-                                                onclick="showServiceDetails(${service.serviceId})" title="Thông tin">
-                                            <i class="bi bi-info-circle"></i>
-                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -382,35 +395,69 @@
                 });
         }
         
+        function editService(serviceId) {
+            fetch('admin?action=getService&id=' + serviceId)
+                .then(response => response.json())
+                .then(service => {
+                    document.getElementById('serviceFormTitle').textContent = 'Chỉnh sửa dịch vụ';
+                    document.getElementById('serviceName').value = service.name;
+                    document.getElementById('serviceDescription').value = service.description;
+                    document.getElementById('servicePrice').value = service.price;
+                    document.getElementById('serviceDuration').value = service.duration;
+                    document.getElementById('serviceStatus').value = service.serviceStatus ? 'Active' : 'Inactive';
+                    document.getElementById('serviceForm').setAttribute('data-id', serviceId);
+                    new bootstrap.Modal(document.getElementById('serviceFormModal')).show();
+                });
+        }
+        
         function addNewService() {
             document.getElementById('serviceFormTitle').textContent = 'Thêm dịch vụ mới';
             document.getElementById('serviceForm').reset();
-            new bootstrap.Modal(document.getElementById('serviceFormModal')).show();
-        }
-        
-        function editService(serviceId) {
-            document.getElementById('serviceFormTitle').textContent = 'Chỉnh sửa dịch vụ';
-            // Load service data and populate form
-            // This would typically involve an AJAX call to get service details
+            document.getElementById('serviceForm').removeAttribute('data-id');
             new bootstrap.Modal(document.getElementById('serviceFormModal')).show();
         }
         
         function saveService() {
-            // Save service functionality
-            alert('Chức năng lưu dịch vụ sẽ được thêm sau');
+            const serviceId = document.getElementById('serviceForm').getAttribute('data-id');
+            const data = {
+                serviceId: serviceId ? parseInt(serviceId) : 0, // Đúng tên trường cho backend
+                name: document.getElementById('serviceName').value,
+                description: document.getElementById('serviceDescription').value,
+                price: document.getElementById('servicePrice').value,
+                duration: document.getElementById('serviceDuration').value,
+                serviceStatus: document.getElementById('serviceStatus').value === 'Active'
+            };
+            fetch('admin?action=saveService', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(msg => {
+                alert(msg);
+                location.reload();
+            });
         }
         
         function activateService(serviceId) {
             if (confirm('Bạn có chắc muốn kích hoạt dịch vụ này?')) {
-                // Activate service functionality
-                alert('Chức năng kích hoạt dịch vụ sẽ được thêm sau');
+                fetch('admin?action=activateService&id=' + serviceId, {method: 'POST'})
+                .then(response => response.text())
+                .then(msg => {
+                    alert(msg);
+                    location.reload();
+                });
             }
         }
         
         function deactivateService(serviceId) {
             if (confirm('Bạn có chắc muốn vô hiệu hóa dịch vụ này?')) {
-                // Deactivate service functionality
-                alert('Chức năng vô hiệu hóa dịch vụ sẽ được thêm sau');
+                fetch('admin?action=deactivateService&id=' + serviceId, {method: 'POST'})
+                .then(response => response.text())
+                .then(msg => {
+                    alert(msg);
+                    location.reload();
+                });
             }
         }
         

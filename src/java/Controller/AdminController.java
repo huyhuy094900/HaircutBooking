@@ -53,6 +53,47 @@ public class AdminController extends HttpServlet {
             } else if ("services".equals(action)) {
                 System.out.println("AdminController: Routing to showServices");
                 showServices(request, response, serviceDAO);
+            } else if ("getService".equals(action)) {
+                // AJAX: Lấy thông tin dịch vụ theo ID, trả về JSON
+                int id = Integer.parseInt(request.getParameter("id"));
+                Service service = serviceDAO.getServiceById(id);
+                response.setContentType("application/json");
+                response.getWriter().write(new com.google.gson.Gson().toJson(service));
+                return;
+            } else if ("saveService".equals(action)) {
+                // AJAX: Thêm mới hoặc cập nhật dịch vụ
+                StringBuilder sb = new StringBuilder();
+                String line;
+                try (java.io.BufferedReader reader = request.getReader()) {
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                }
+                com.google.gson.Gson gson = new com.google.gson.Gson();
+                Service service = gson.fromJson(sb.toString(), Service.class);
+                String msg;
+                if (service.getServiceId() == 0) {
+                    serviceDAO.addService(service);
+                    msg = "Thêm mới thành công!";
+                } else {
+                    serviceDAO.updateService(service);
+                    msg = "Cập nhật thành công!";
+                }
+                response.setContentType("text/plain");
+                response.getWriter().write(msg);
+                return;
+            } else if ("activateService".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                serviceDAO.setServiceStatus(id, true);
+                response.setContentType("text/plain");
+                response.getWriter().write("Đã kích hoạt dịch vụ!");
+                return;
+            } else if ("deactivateService".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                serviceDAO.setServiceStatus(id, false);
+                response.setContentType("text/plain");
+                response.getWriter().write("Đã vô hiệu hóa dịch vụ!");
+                return;
             } else if ("staff".equals(action)) {
                 System.out.println("AdminController: Routing to showStaff");
                 showStaff(request, response, staffDAO);

@@ -30,7 +30,7 @@ public class BanUserController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DaoUser daoUser = new DaoUser();
+            DaoUser daoUser = new DaoUser();
         int id = Integer.parseInt(request.getParameter("userID"));
         daoUser.banUser(id, ""); // No reason needed, pass empty string
         String requestedWith = request.getHeader("X-Requested-With");

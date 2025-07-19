@@ -18,6 +18,7 @@ public class Staff {
     private String staffImage;
     private Timestamp createdAt;
     private boolean staffStatus;
+    private String staffPosition;
 
     public int getStaffId() {
         return staffId;
@@ -73,5 +74,13 @@ public class Staff {
 
     public void setStaffStatus(boolean staffStatus) {
         this.staffStatus = staffStatus;
+    }
+
+    public String getStaffPosition() {
+        return staffPosition;
+    }
+
+    public void setStaffPosition(String staffPosition) {
+        this.staffPosition = staffPosition;
     }
 }

@@ -79,7 +79,8 @@ CREATE TABLE Staff (
     password VARCHAR(100),
     staff_image VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    staff_status BOOLEAN DEFAULT FALSE
+    staff_status BOOLEAN DEFAULT FALSE,
+    staff_position VARCHAR(50) DEFAULT 'Stylist'
 );
 
 -- Create Bookings table
@@ -153,14 +154,14 @@ VALUES
 ('Làm móng tay', 'Dịch vụ làm móng tay và sơn gel', 45, 120000, 'blog/blog-1.jpg', TRUE),
 ('Tẩy tế bào chết', 'Dịch vụ tẩy tế bào chết toàn thân', 60, 200000, 'blog/blog-2.jpg', TRUE);
 -- Insert Staff
-INSERT INTO Staff (staff_name, staff_email, password, staff_image, staff_status) 
+INSERT INTO Staff (staff_name, staff_email, password, staff_image, staff_status, staff_position) 
 VALUES 
-('Linh Nguyen', 'linh.staff@haircut.com', 'staff123', 'linh.jpg', TRUE),
-('Hoang Tran', 'hoang.staff@haircut.com', 'staff123', 'hoang.jpg', TRUE),
-('Mai Pham', 'mai.staff@haircut.com', 'staff123', 'mai.jpg', TRUE),
-('Duc Le', 'duc.staff@haircut.com', 'staff123', 'duc.jpg', TRUE),
-('Hoa Nguyen', 'hoa.staff@haircut.com', 'staff123', 'hoa.jpg', TRUE),
-('Tuan Pham', 'tuan.staff@haircut.com', 'staff123', 'tuan.jpg', TRUE);
+('Linh Nguyen', 'linh.staff@haircut.com', 'staff123', 'linh.jpg', TRUE, 'Stylist'),
+('Hoang Tran', 'hoang.staff@haircut.com', 'staff123', 'hoang.jpg', TRUE, 'Manager'),
+('Mai Pham', 'mai.staff@haircut.com', 'staff123', 'mai.jpg', TRUE, 'Stylist'),
+('Duc Le', 'duc.staff@haircut.com', 'staff123', 'duc.jpg', TRUE, 'Assistant'),
+('Hoa Nguyen', 'hoa.staff@haircut.com', 'staff123', 'hoa.jpg', TRUE, 'Stylist'),
+('Tuan Pham', 'tuan.staff@haircut.com', 'staff123', 'tuan.jpg', TRUE, 'Assistant');
 
 -- Insert Shifts
 INSERT INTO Shifts (start_time, end_time) 
@@ -231,3 +232,8 @@ SELECT '=== AVAILABLE STAFF ===' as Info;
 SELECT staff_name, staff_email FROM Staff WHERE staff_status = TRUE;
 
 
+
+-- (Tùy chọn) Cập nhật vị trí cho từng nhân viên
+UPDATE Staff SET staff_position = 'Stylist' WHERE staff_id IN (1, 3, 5);
+UPDATE Staff SET staff_position = 'Manager' WHERE staff_id = 2;
+UPDATE Staff SET staff_position = 'Assistant' WHERE staff_id IN (4, 6); 

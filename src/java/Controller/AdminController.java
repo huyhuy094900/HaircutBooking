@@ -97,6 +97,14 @@ public class AdminController extends HttpServlet {
             } else if ("staff".equals(action)) {
                 System.out.println("AdminController: Routing to showStaff");
                 showStaff(request, response, staffDAO);
+            } else if ("addStaff".equals(action)) {
+                addStaff(request, response, staffDAO);
+            } else if ("editStaff".equals(action)) {
+                editStaff(request, response, staffDAO);
+            } else if ("toggleStaffStatus".equals(action)) {
+                toggleStaffStatus(request, response, staffDAO);
+            } else if ("viewStaff".equals(action)) {
+                viewStaff(request, response, staffDAO);
             } else if ("bookings".equals(action)) {
                 System.out.println("AdminController: Routing to showBookings");
                 showBookings(request, response, bookingDAO, userDAO, serviceDAO, staffDAO);
@@ -355,15 +363,16 @@ public class AdminController extends HttpServlet {
             System.out.println("AdminController: Starting showStaff...");
             
             List<Staff> allStaff = staffDAO.getAllStaff();
-            
-            // Calculate statistics
-            int totalStaff = allStaff.size();
+            System.out.println("AdminController: allStaff size = " + (allStaff != null ? allStaff.size() : "null"));
+            int totalStaff = allStaff != null ? allStaff.size() : 0;
             int activeStaff = 0;
             int inactiveStaff = 0;
             
-            for (Staff staff : allStaff) {
-                if (staff.isStaffStatus()) activeStaff++;
-                else inactiveStaff++;
+            if (allStaff != null) {
+                for (Staff staff : allStaff) {
+                    if (staff.isStaffStatus()) activeStaff++;
+                    else inactiveStaff++;
+                }
             }
             
             request.setAttribute("allStaff", allStaff);
@@ -425,6 +434,58 @@ public class AdminController extends HttpServlet {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    // Thêm mới nhân viên
+    private void addStaff(HttpServletRequest request, HttpServletResponse response, StaffDAO staffDAO) throws ServletException, IOException {
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String position = request.getParameter("position");
+        String status = request.getParameter("status");
+        Staff staff = new Staff();
+        staff.setStaffName(name);
+        staff.setStaffEmail(email);
+        staff.setStaffPosition(position);
+        staff.setStaffStatus("Active".equals(status));
+        staffDAO.addStaff(staff);
+        response.sendRedirect("AdminController?action=staff");
+    }
+
+    // Sửa thông tin nhân viên
+    private void editStaff(HttpServletRequest request, HttpServletResponse response, StaffDAO staffDAO) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String position = request.getParameter("position");
+        String status = request.getParameter("status");
+        Staff staff = staffDAO.getStaffById(id);
+        if (staff != null) {
+            staff.setStaffName(name);
+            staff.setStaffEmail(email);
+            staff.setStaffPosition(position);
+            staff.setStaffStatus("Active".equals(status));
+            staffDAO.updateStaff(staff);
+        }
+        response.sendRedirect("AdminController?action=staff");
+    }
+
+    // Đổi trạng thái nhân viên
+    private void toggleStaffStatus(HttpServletRequest request, HttpServletResponse response, StaffDAO staffDAO) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Staff staff = staffDAO.getStaffById(id);
+        if (staff != null) {
+            staff.setStaffStatus(!staff.isStaffStatus());
+            staffDAO.updateStaff(staff);
+        }
+        response.sendRedirect("AdminController?action=staff");
+    }
+
+    // Xem chi tiết nhân viên
+    private void viewStaff(HttpServletRequest request, HttpServletResponse response, StaffDAO staffDAO) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Staff staff = staffDAO.getStaffById(id);
+        request.setAttribute("staff", staff);
+        request.getRequestDispatcher("StaffDetail.jsp").forward(request, response);
     }
 
     @Override

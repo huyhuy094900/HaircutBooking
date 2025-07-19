@@ -3,7 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/Staff.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/web/AdminBookings.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/AdminController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/StaffLoginController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Model/Shift.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/UserDetailForAdminController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/web/AdminStaff.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/DAO/TestConnection.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/StaffBookingsController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/DAO/BookingDAO.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/DAO/UserDAO.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/web/AdminServices.jsp</file>
             <file>file:/D:/sehuy/HaircutBooking/web/BookingSuccess.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/UnbanUserController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/TestLoginController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/StaffDashboardController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/web/Login.jsp</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/Controller/AdminDashboardController.java</file>
+            <file>file:/D:/sehuy/HaircutBooking/src/java/DAO/StaffDAO.java</file>
         </group>
     </open-files>
 </project-private>

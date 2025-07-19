@@ -26,13 +26,14 @@ public class StaffDAO extends DBContext {
     }
 
     public boolean addStaff(Staff staff) {
-        String sql = "INSERT INTO Staff (staff_name, staff_email, password, staff_image, staff_status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Staff (staff_name, staff_email, password, staff_image, staff_status, staff_position) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, staff.getStaffName());
             ps.setString(2, staff.getStaffEmail());
             ps.setString(3, staff.getPassword());
             ps.setString(4, staff.getStaffImage());
             ps.setBoolean(5, staff.isStaffStatus());
+            ps.setString(6, staff.getStaffPosition());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,12 +42,14 @@ public class StaffDAO extends DBContext {
     }
 
     public boolean updateStaff(Staff staff) {
-        String sql = "UPDATE Staff SET staff_name = ?, staff_email = ?, staff_image = ? WHERE staff_id = ?";
+        String sql = "UPDATE Staff SET staff_name = ?, staff_email = ?, staff_image = ?, staff_position = ?, staff_status = ? WHERE staff_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, staff.getStaffName());
             ps.setString(2, staff.getStaffEmail());
             ps.setString(3, staff.getStaffImage());
-            ps.setInt(4, staff.getStaffId());
+            ps.setString(4, staff.getStaffPosition());
+            ps.setBoolean(5, staff.isStaffStatus());
+            ps.setInt(6, staff.getStaffId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -176,6 +179,7 @@ public class StaffDAO extends DBContext {
         staff.setStaffImage(rs.getString("staff_image"));
         staff.setCreatedAt(rs.getTimestamp("created_at"));
         staff.setStaffStatus(rs.getBoolean("staff_status"));
+        staff.setStaffPosition(rs.getString("staff_position"));
         return staff;
     }
 } 

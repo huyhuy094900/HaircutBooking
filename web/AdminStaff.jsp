@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:out value="${allStaff}" />
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -21,35 +21,51 @@
 <jsp:include page="AdminHeader.jsp"/>
 <div class="admin-header">
     <div class="container">
-        <h1><i class="bi bi-person-badge"></i> Quản lý nhân viên</h1>
-        <p class="lead mb-0">Quản lý thông tin, trạng thái và thao tác với nhân viên</p>
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1><i class="bi bi-person-badge"></i> Quản lý nhân viên</h1>
+                <p class="lead mb-0">Quản lý thông tin, trạng thái và thao tác với nhân viên</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="admin" class="btn btn-light">
+                    <i class="bi bi-arrow-left"></i> Quay lại Dashboard
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 <div class="container">
+    <!-- Hiển thị thông báo lỗi nếu có -->
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
     <!-- Thanh tìm kiếm và lọc -->
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Tìm kiếm theo tên, email...">
+    <form id="filterForm" method="get" action="admin">
+        <input type="hidden" name="action" value="staff">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="search" placeholder="Tìm kiếm theo tên, email..." value="${search}" onchange="document.getElementById('filterForm').submit();">
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit();">
+                    <option value="" <c:if test="${empty status}">selected</c:if>>Tất cả trạng thái</option>
+                    <option value="Active" <c:if test="${status == 'Active'}">selected</c:if>>Active</option>
+                    <option value="Inactive" <c:if test="${status == 'Inactive'}">selected</c:if>>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" name="position" onchange="document.getElementById('filterForm').submit();">
+                    <option value="" <c:if test="${empty position}">selected</c:if>>Tất cả vị trí</option>
+                    <option value="Stylist" <c:if test="${position == 'Stylist'}">selected</c:if>>Stylist</option>
+                    <option value="Manager" <c:if test="${position == 'Manager'}">selected</c:if>>Manager</option>
+                    <option value="Assistant" <c:if test="${position == 'Assistant'}">selected</c:if>>Assistant</option>
+                </select>
+            </div>
+            <div class="col-md-2 text-end">
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staffModal"><i class="bi bi-plus"></i> Thêm mới</button>
+            </div>
         </div>
-        <div class="col-md-3">
-            <select class="form-select">
-                <option value="">Tất cả trạng thái</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <select class="form-select">
-                <option value="">Tất cả vị trí</option>
-                <option value="Stylist">Stylist</option>
-                <option value="Manager">Manager</option>
-                <option value="Assistant">Assistant</option>
-            </select>
-        </div>
-        <div class="col-md-2 text-end">
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staffModal"><i class="bi bi-plus"></i> Thêm mới</button>
-        </div>
-    </div>
+    </form>
     <!-- Bảng danh sách nhân viên -->
     <div class="staff-table-card mb-4">
         <table class="table table-hover">
@@ -71,7 +87,7 @@
                                 <td>${staff.staffId}</td>
                                 <td>${staff.staffName}</td>
                                 <td>${staff.staffEmail}</td>
-                                <td>${staff.staffPosition != null ? staff.staffPosition : '—'}</td>
+                                <td>${empty staff.staffPosition ? '—' : staff.staffPosition}</td>
                                 <td>
                                     <span class="badge ${staff.staffStatus ? 'bg-success' : 'bg-danger'}">
                                         ${staff.staffStatus ? 'Active' : 'Inactive'}
@@ -80,7 +96,12 @@
                                 <td>
                                     <button class="btn btn-info btn-sm btn-action" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
                                     <button class="btn btn-primary btn-sm btn-action" title="Sửa" data-bs-toggle="modal" data-bs-target="#staffModal"
-                                        onclick="editStaff('${staff.staffId}', '${staff.staffName}', '${staff.staffEmail}', '${staff.staffPosition}', '${staff.staffStatus ? 'Active' : 'Inactive'}')">
+                                        data-id="${staff.staffId}"
+                                        data-name="${fn:replace(staff.staffName, '\'', '\\\'')}" 
+                                        data-email="${fn:replace(staff.staffEmail, '\'', '\\\'')}" 
+                                        data-position="${staff.staffPosition != null ? fn:replace(staff.staffPosition, '\'', '\\\'') : ''}"
+                                        data-status="${staff.staffStatus ? 'Active' : 'Inactive'}"
+                                        onclick="editStaffFromButton(this)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <form method="post" action="AdminController" style="display:inline">
@@ -149,8 +170,13 @@
 </div>
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
-// Hàm mở modal sửa, điền dữ liệu vào form
-function editStaff(id, name, email, position, status) {
+// Hàm mở modal sửa, điền dữ liệu vào form từ data attribute
+function editStaffFromButton(btn) {
+    const id = btn.getAttribute('data-id');
+    const name = btn.getAttribute('data-name');
+    const email = btn.getAttribute('data-email');
+    const position = btn.getAttribute('data-position');
+    const status = btn.getAttribute('data-status');
     document.getElementById('staffModalTitle').textContent = 'Sửa nhân viên';
     document.getElementById('staffForm').action = 'AdminController';
     document.getElementById('staffForm').elements['action'].value = 'editStaff';
@@ -176,4 +202,4 @@ if (addBtn) {
 }
 </script>
 </body>
-</html> 
+</html>

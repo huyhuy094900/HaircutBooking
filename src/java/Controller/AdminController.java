@@ -12,13 +12,14 @@ import Model.Staff;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.ArrayList;
-
+@WebServlet("/AdminController")
 public class AdminController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -361,28 +362,55 @@ public class AdminController extends HttpServlet {
         
         try {
             System.out.println("AdminController: Starting showStaff...");
-            
+
+            String search = request.getParameter("search");
+            String status = request.getParameter("status");
+            String position = request.getParameter("position");
+
             List<Staff> allStaff = staffDAO.getAllStaff();
-            System.out.println("AdminController: allStaff size = " + (allStaff != null ? allStaff.size() : "null"));
-            int totalStaff = allStaff != null ? allStaff.size() : 0;
+            List<Staff> filteredStaff = new ArrayList<>();
+
+            for (Staff staff : allStaff) {
+                boolean match = true;
+                if (search != null && !search.trim().isEmpty()) {
+                    String s = search.trim().toLowerCase();
+                    if (!(staff.getStaffName().toLowerCase().contains(s) || staff.getStaffEmail().toLowerCase().contains(s))) {
+                        match = false;
+                    }
+                }
+                if (status != null && !status.isEmpty()) {
+                    boolean isActive = "Active".equals(status);
+                    if (staff.isStaffStatus() != isActive) {
+                        match = false;
+                    }
+                }
+                if (position != null && !position.isEmpty()) {
+                    if (!position.equals(staff.getStaffPosition())) {
+                        match = false;
+                    }
+                }
+                if (match) filteredStaff.add(staff);
+            }
+
+            int totalStaff = filteredStaff.size();
             int activeStaff = 0;
             int inactiveStaff = 0;
-            
-            if (allStaff != null) {
-                for (Staff staff : allStaff) {
-                    if (staff.isStaffStatus()) activeStaff++;
-                    else inactiveStaff++;
-                }
+            for (Staff staff : filteredStaff) {
+                if (staff.isStaffStatus()) activeStaff++;
+                else inactiveStaff++;
             }
-            
-            request.setAttribute("allStaff", allStaff);
+
+            request.setAttribute("allStaff", filteredStaff);
             request.setAttribute("staffCount", totalStaff);
             request.setAttribute("activeStaffCount", activeStaff);
             request.setAttribute("inactiveStaffCount", inactiveStaff);
-            
+            request.setAttribute("search", search);
+            request.setAttribute("status", status);
+            request.setAttribute("position", position);
+
             System.out.println("AdminController: Forwarding to AdminStaff.jsp");
             request.getRequestDispatcher("AdminStaff.jsp").forward(request, response);
-            
+
         } catch (Exception e) {
             System.out.println("AdminController: Error in showStaff: " + e.getMessage());
             e.printStackTrace();
@@ -447,26 +475,40 @@ public class AdminController extends HttpServlet {
         staff.setStaffEmail(email);
         staff.setStaffPosition(position);
         staff.setStaffStatus("Active".equals(status));
+        staff.setPassword("123456"); // Mặc định password
+        staff.setStaffImage(""); // Mặc định không có ảnh
         staffDAO.addStaff(staff);
         response.sendRedirect("AdminController?action=staff");
     }
 
     // Sửa thông tin nhân viên
     private void editStaff(HttpServletRequest request, HttpServletResponse response, StaffDAO staffDAO) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        String idStr = request.getParameter("id");
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String position = request.getParameter("position");
         String status = request.getParameter("status");
-        Staff staff = staffDAO.getStaffById(id);
-        if (staff != null) {
+        try {
+            if (idStr == null || idStr.isEmpty()) throw new Exception("Thiếu id nhân viên");
+            int id = Integer.parseInt(idStr);
+            if (name == null || name.isEmpty()) throw new Exception("Thiếu tên nhân viên");
+            if (email == null || email.isEmpty()) throw new Exception("Thiếu email nhân viên");
+            if (position == null) position = "";
+            if (status == null) status = "Inactive";
+            Staff staff = staffDAO.getStaffById(id);
+            if (staff == null) throw new Exception("Không tìm thấy nhân viên với id: " + id);
             staff.setStaffName(name);
             staff.setStaffEmail(email);
             staff.setStaffPosition(position);
             staff.setStaffStatus("Active".equals(status));
             staffDAO.updateStaff(staff);
+            response.sendRedirect("AdminController?action=staff");
+        } catch (Exception ex) {
+            System.out.println("[ERROR] editStaff: " + ex.getMessage());
+            ex.printStackTrace();
+            request.setAttribute("error", "Lỗi khi sửa nhân viên: " + ex.getMessage());
+            showStaff(request, response, staffDAO);
         }
-        response.sendRedirect("AdminController?action=staff");
     }
 
     // Đổi trạng thái nhân viên

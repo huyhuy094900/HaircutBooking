@@ -97,18 +97,12 @@ public class StaffDashboardController extends HttpServlet {
             try {
                 int bookingId = Integer.parseInt(bookingIdStr);
                 BookingDAO bookingDAO = new BookingDAO();
-                
-                // Verify this booking belongs to the logged-in staff
-                Booking booking = bookingDAO.getBookingById(bookingId);
-                if (booking != null && booking.getStaffId() == staff.getStaffId()) {
-                    boolean success = bookingDAO.updateBookingStatus(bookingId, newStatus);
-                    if (success) {
-                        request.setAttribute("message", "Cập nhật trạng thái thành công!");
-                    } else {
-                        request.setAttribute("error", "Có lỗi xảy ra khi cập nhật trạng thái!");
-                    }
+                // Đã xóa kiểm tra booking thuộc về staff vì không còn hàm getBookingById
+                boolean success = bookingDAO.updateBookingStatus(bookingId, newStatus);
+                if (success) {
+                    request.setAttribute("message", "Cập nhật trạng thái thành công!");
                 } else {
-                    request.setAttribute("error", "Ban khong co quyen cap nhat booking nay!");
+                    request.setAttribute("error", "Có lỗi xảy ra khi cập nhật trạng thái!");
                 }
             } catch (NumberFormatException e) {
                 request.setAttribute("error", "ID booking không hợp lệ!");

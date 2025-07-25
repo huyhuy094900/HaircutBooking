@@ -106,12 +106,9 @@ public class AdminController extends HttpServlet {
                 toggleStaffStatus(request, response, staffDAO);
             } else if ("viewStaff".equals(action)) {
                 viewStaff(request, response, staffDAO);
-            } else if ("bookings".equals(action)) {
-                System.out.println("AdminController: Routing to showBookings");
-                showBookings(request, response, bookingDAO, userDAO, serviceDAO, staffDAO);
             } else {
                 System.out.println("AdminController: Routing to showDashboard (default)");
-                showDashboard(request, response, bookingDAO, userDAO, serviceDAO, staffDAO, notificationDAO);
+                showDashboard(request, response, userDAO, serviceDAO, staffDAO, notificationDAO);
             }
             
         } catch (Exception e) {
@@ -143,40 +140,16 @@ public class AdminController extends HttpServlet {
     }
 
     private void showDashboard(HttpServletRequest request, HttpServletResponse response,
-                             BookingDAO bookingDAO, DaoUser userDAO, DaoService serviceDAO, StaffDAO staffDAO, NotificationDAO notificationDAO) 
+                             DaoUser userDAO, DaoService serviceDAO, StaffDAO staffDAO, NotificationDAO notificationDAO) 
             throws ServletException, IOException {
         
         try {
             System.out.println("AdminController: Starting showDashboard...");
             
             // Load data with error handling
-            List<Booking> allBookings = new ArrayList<>();
-            List<Booking> pendingBookings = new ArrayList<>();
-            List<Booking> completedBookings = new ArrayList<>();
             List<User> allUsers = new ArrayList<>();
             List<Service> allServices = new ArrayList<>();
             List<Staff> allStaff = new ArrayList<>();
-            
-            try {
-                allBookings = bookingDAO.getAllBookings();
-                System.out.println("AdminController: Loaded " + allBookings.size() + " bookings");
-            } catch (Exception e) {
-                System.out.println("AdminController: Error loading bookings: " + e.getMessage());
-            }
-            
-            try {
-                pendingBookings = bookingDAO.getBookingsByStatus("Pending");
-                System.out.println("AdminController: Loaded " + pendingBookings.size() + " pending bookings");
-            } catch (Exception e) {
-                System.out.println("AdminController: Error loading pending bookings: " + e.getMessage());
-            }
-            
-            try {
-                completedBookings = bookingDAO.getBookingsByStatus("Completed");
-                System.out.println("AdminController: Loaded " + completedBookings.size() + " completed bookings");
-            } catch (Exception e) {
-                System.out.println("AdminController: Error loading completed bookings: " + e.getMessage());
-            }
             
             try {
                 allUsers = userDAO.getAllUsers();
@@ -199,35 +172,8 @@ public class AdminController extends HttpServlet {
                 System.out.println("AdminController: Error loading staff: " + e.getMessage());
             }
             
-            // Calculate statistics
-            int totalBookings = allBookings.size();
-            int pendingCount = pendingBookings.size();
-            int completedCount = completedBookings.size();
-            int totalUsers = allUsers.size();
-            int totalServices = allServices.size();
-            int totalStaff = allStaff.size();
-            
-            // Calculate revenue
-            double totalRevenue = 0.0;
-            for (Booking booking : completedBookings) {
-                if (booking.getService() != null && booking.getService().getPrice() != null) {
-                    totalRevenue += booking.getService().getPrice().doubleValue();
-                }
-            }
-            
-            // Calculate active users
-            int activeUsers = 0;
-            java.util.Date thirtyDaysAgo = new java.util.Date(System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000));
-            for (User user : allUsers) {
-                for (Booking booking : allBookings) {
-                    if (booking.getUser() != null && booking.getUser().getUserId() == user.getUserId()) {
-                        if (booking.getBookingDate() != null && booking.getBookingDate().after(thirtyDaysAgo)) {
-                            activeUsers++;
-                            break;
-                        }
-                    }
-                }
-            }
+            // Đã xóa toàn bộ logic tính toán activeUsers vì không còn dữ liệu booking
+            // ... giữ lại các phần lấy user, service, staff, notification nếu cần ...
             
             // Calculate available staff
             int availableStaff = 0;
@@ -238,14 +184,9 @@ public class AdminController extends HttpServlet {
             }
             
             // Set attributes
-            request.setAttribute("bookingCount", totalBookings);
-            request.setAttribute("userCount", totalUsers);
-            request.setAttribute("serviceCount", totalServices);
-            request.setAttribute("staffCount", totalStaff);
-            request.setAttribute("pendingBookings", pendingCount);
-            request.setAttribute("completedBookings", completedCount);
-            request.setAttribute("totalRevenue", String.format("%.0f", totalRevenue));
-            request.setAttribute("activeUsers", activeUsers);
+            request.setAttribute("userCount", allUsers.size());
+            request.setAttribute("serviceCount", allServices.size());
+            request.setAttribute("staffCount", allStaff.size());
             request.setAttribute("availableStaff", availableStaff);
             
             // Load unread notification count
@@ -262,13 +203,10 @@ public class AdminController extends HttpServlet {
             List<User> recentUsers = allUsers.size() > 5 ? allUsers.subList(0, 5) : allUsers;
             List<Service> recentServices = allServices.size() > 5 ? allServices.subList(0, 5) : allServices;
             List<Staff> recentStaff = allStaff.size() > 5 ? allStaff.subList(0, 5) : allStaff;
-            List<Booking> recentBookings = allBookings.size() > 5 ? allBookings.subList(0, 5) : allBookings;
             
-            request.setAttribute("recentBookings", recentBookings);
             request.setAttribute("recentUsers", recentUsers);
             request.setAttribute("recentServices", recentServices);
             request.setAttribute("recentStaff", recentStaff);
-            request.setAttribute("allBookings", allBookings);
             request.setAttribute("allUsers", allUsers);
             request.setAttribute("allServices", allServices);
             request.setAttribute("allStaff", allStaff);
@@ -413,52 +351,6 @@ public class AdminController extends HttpServlet {
 
         } catch (Exception e) {
             System.out.println("AdminController: Error in showStaff: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    private void showBookings(HttpServletRequest request, HttpServletResponse response,
-                            BookingDAO bookingDAO, DaoUser userDAO, DaoService serviceDAO, StaffDAO staffDAO) 
-            throws ServletException, IOException {
-        
-        try {
-            System.out.println("AdminController: Starting showBookings...");
-            
-            List<Booking> allBookings = bookingDAO.getAllBookings();
-            List<User> allUsers = userDAO.getAllUsers();
-            List<Service> allServices = serviceDAO.getAllService();
-            List<Staff> allStaff = staffDAO.getAllStaff();
-            
-            // Calculate statistics
-            int totalBookings = allBookings.size();
-            int pendingBookings = 0;
-            int confirmedBookings = 0;
-            double totalRevenue = 0.0;
-            
-            for (Booking booking : allBookings) {
-                if ("Pending".equals(booking.getStatus())) pendingBookings++;
-                else if ("Confirmed".equals(booking.getStatus())) confirmedBookings++;
-                
-                if (booking.getService() != null && booking.getService().getPrice() != null) {
-                    totalRevenue += booking.getService().getPrice().doubleValue();
-                }
-            }
-            
-            request.setAttribute("allBookings", allBookings);
-            request.setAttribute("allUsers", allUsers);
-            request.setAttribute("allServices", allServices);
-            request.setAttribute("allStaff", allStaff);
-            request.setAttribute("bookingCount", totalBookings);
-            request.setAttribute("pendingBookingCount", pendingBookings);
-            request.setAttribute("confirmedBookingCount", confirmedBookings);
-            request.setAttribute("totalRevenue", String.format("%.2f", totalRevenue));
-            
-            System.out.println("AdminController: Forwarding to AdminBookings.jsp");
-            request.getRequestDispatcher("AdminBookings.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            System.out.println("AdminController: Error in showBookings: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }

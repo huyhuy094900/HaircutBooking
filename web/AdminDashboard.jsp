@@ -332,7 +332,7 @@
                         <div class="table-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4>Danh sách người dùng</h4>
-                                <a href="AdminDashboardController?action=users" class="btn btn-primary">
+                                <a href="admin?action=users" class="btn btn-primary">
                                     <i class="bi bi-people"></i> Xem tất cả
                                 </a>
                             </div>
@@ -391,7 +391,7 @@
                         <div class="table-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4>Danh sách dịch vụ</h4>
-                                <a href="AdminDashboardController?action=services" class="btn btn-success">
+                                <a href="admin?action=services" class="btn btn-success">
                                     <i class="bi bi-scissors"></i> Xem tất cả
                                 </a>
                             </div>
@@ -446,7 +446,7 @@
                         <div class="table-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4>Danh sách nhân viên</h4>
-                                <a href="AdminDashboardController?action=staff" class="btn btn-warning">
+                                <a href="admin?action=staff" class="btn btn-warning">
                                     <i class="bi bi-person-badge"></i> Quản lý nhân viên
                                 </a>
                             </div>
@@ -501,7 +501,7 @@
                         <div class="table-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4>Danh sách đặt lịch</h4>
-                                <a href="AdminDashboardController?action=bookings" class="btn btn-primary">
+                                <a href="AdminBookingManager.jsp" class="btn btn-primary">
                                     <i class="bi bi-calendar-plus"></i> Xem tất cả
                                 </a>
                             </div>

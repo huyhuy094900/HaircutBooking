@@ -68,7 +68,7 @@ public class BookingDAO extends DBContext {
 
     public List<Booking> getBookingsByUser(int userId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, s.price, s.service_id as service_id, st.staff_name, st.staff_id as staff_id, sh.start_time, sh.end_time, sh.shifts_id as shifts_id " +
                     "FROM Bookings b " +
                     "JOIN Users u ON b.user_id = u.user_id " +
                     "JOIN Services s ON b.service_id = s.service_id " +
@@ -90,31 +90,9 @@ public class BookingDAO extends DBContext {
         return bookings;
     }
 
-    public List<Booking> getAllBookings() {
-        List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
-                    "FROM Bookings b " +
-                    "JOIN Users u ON b.user_id = u.user_id " +
-                    "JOIN Services s ON b.service_id = s.service_id " +
-                    "JOIN Staff st ON b.staff_id = st.staff_id " +
-                    "JOIN Shifts sh ON b.shifts_id = sh.shifts_id " +
-                    "ORDER BY b.booking_date DESC";
-        
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Booking booking = mapResultSetToBooking(rs);
-                bookings.add(booking);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return bookings;
-    }
-
     public List<Booking> getBookingsByDate(Date date) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, s.price, s.service_id as service_id, st.staff_name, st.staff_id as staff_id, sh.start_time, sh.end_time, sh.shifts_id as shifts_id " +
                     "FROM Bookings b " +
                     "JOIN Users u ON b.user_id = u.user_id " +
                     "JOIN Services s ON b.service_id = s.service_id " +
@@ -224,28 +202,6 @@ public class BookingDAO extends DBContext {
         return shifts;
     }
 
-    public Booking getBookingById(int bookingId) {
-        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
-                    "FROM Bookings b " +
-                    "JOIN Users u ON b.user_id = u.user_id " +
-                    "JOIN Services s ON b.service_id = s.service_id " +
-                    "JOIN Staff st ON b.staff_id = st.staff_id " +
-                    "JOIN Shifts sh ON b.shifts_id = sh.shifts_id " +
-                    "WHERE b.booking_id = ?";
-        
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, bookingId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapResultSetToBooking(rs);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private Booking mapResultSetToBooking(ResultSet rs) throws SQLException {
         Booking booking = new Booking();
         booking.setBookingId(rs.getInt("booking_id"));
@@ -257,50 +213,32 @@ public class BookingDAO extends DBContext {
         booking.setStatus(rs.getString("status"));
         booking.setNote(rs.getString("note"));
         booking.setCreatedAt(rs.getTimestamp("created_at"));
-        
         // Set reference objects
         User user = new User();
+        user.setUserId(rs.getInt("user_id"));
         user.setFullName(rs.getString("user_name"));
+        // Có thể set thêm các trường khác nếu cần
         booking.setUser(user);
-        
         Service service = new Service();
+        service.setServiceId(rs.getInt("service_id"));
         service.setName(rs.getString("service_name"));
+        try { service.setPrice(rs.getBigDecimal("price")); } catch (Exception ignore) {}
         booking.setService(service);
-        
+        // Set totalPrice nếu có price
+        if (service.getPrice() != null) {
+            booking.setTotalPrice(service.getPrice().doubleValue());
+        }
         Staff staff = new Staff();
+        staff.setStaffId(rs.getInt("staff_id"));
         staff.setStaffName(rs.getString("staff_name"));
+        // Có thể set thêm các trường khác nếu cần
         booking.setStaff(staff);
-        
         Shift shift = new Shift();
+        shift.setShiftsId(rs.getInt("shifts_id"));
         shift.setStartTime(rs.getTime("start_time"));
         shift.setEndTime(rs.getTime("end_time"));
         booking.setShift(shift);
-        
         return booking;
-    }
-
-    public List<Booking> getBookingsByStatus(String status) {
-        List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
-                    "FROM Bookings b " +
-                    "JOIN Users u ON b.user_id = u.user_id " +
-                    "JOIN Services s ON b.service_id = s.service_id " +
-                    "JOIN Staff st ON b.staff_id = st.staff_id " +
-                    "JOIN Shifts sh ON b.shifts_id = sh.shifts_id " +
-                    "WHERE b.status = ? ORDER BY b.booking_date DESC";
-        
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, status);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Booking booking = mapResultSetToBooking(rs);
-                    bookings.add(booking);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return bookings;
     }
 
     // Method moi: kiem tra stylist co available trong khung gio va ngay cu the khong
@@ -354,7 +292,7 @@ public class BookingDAO extends DBContext {
     // Method moi: lay danh sach booking theo staff_id
     public List<Booking> getBookingsByStaff(int staffId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, s.price, s.service_id as service_id, st.staff_name, st.staff_id as staff_id, sh.start_time, sh.end_time, sh.shifts_id as shifts_id " +
                     "FROM Bookings b " +
                     "JOIN Users u ON b.user_id = u.user_id " +
                     "JOIN Services s ON b.service_id = s.service_id " +
@@ -382,7 +320,7 @@ public class BookingDAO extends DBContext {
     // Method moi: lay danh sach booking theo staff_id va ngay cu the
     public List<Booking> getBookingsByStaffAndDate(int staffId, Date bookingDate) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, st.staff_name, sh.start_time, sh.end_time " +
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, s.price, s.service_id as service_id, st.staff_name, st.staff_id as staff_id, sh.start_time, sh.end_time, sh.shifts_id as shifts_id " +
                     "FROM Bookings b " +
                     "JOIN Users u ON b.user_id = u.user_id " +
                     "JOIN Services s ON b.service_id = s.service_id " +

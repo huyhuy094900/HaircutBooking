@@ -58,7 +58,7 @@ public class StaffBookingsController extends HttpServlet {
             try {
                 int bookingId = Integer.parseInt(bookingIdStr);
                 BookingDAO bookingDAO = new BookingDAO();
-                // Đã xóa kiểm tra booking thuộc về staff vì không còn hàm getBookingById
+                // Da xoa kiem tra booking thuoc ve staff vi khong con ham getBookingById
                 boolean success = bookingDAO.updateBookingStatus(bookingId, newStatus);
                 if (success) {
                     request.setAttribute("message", "Cập nhật trạng thái thành công!");

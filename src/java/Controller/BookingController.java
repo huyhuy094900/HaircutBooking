@@ -12,12 +12,12 @@ import Model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 
 public class BookingController extends HttpServlet {
 
@@ -83,7 +83,6 @@ public class BookingController extends HttpServlet {
             int shiftId = Integer.parseInt(request.getParameter("shiftId"));
             Date bookingDate = Date.valueOf(request.getParameter("bookingDate"));
             String note = request.getParameter("note");
-            
             // Check if there are any existing bookings for this time slot
             boolean hasConflict = bookingDAO.hasTimeSlotConflict(staffId, shiftId, bookingDate);
             
@@ -115,12 +114,10 @@ public class BookingController extends HttpServlet {
             booking.setStatus("Confirmed");
             
             if (bookingDAO.createBooking(booking)) {
-                // Create notification for admin (optional, can be skipped if not needed)
-                // ...
-                request.setAttribute("success", "Booking successful! Your appointment has been confirmed.");
+                request.setAttribute("success", "Dat lich thanh cong! Vui long thanh toan tai quay khi den.");
                 request.getRequestDispatcher("BookingSuccess.jsp").forward(request, response);
             } else {
-                request.setAttribute("error", "Booking failed. Please try again.");
+                request.setAttribute("error", "Dat lich that bai. Vui long thu lai.");
                 request.getRequestDispatcher("BookingForm.jsp").forward(request, response);
             }
         } catch (Exception e) {

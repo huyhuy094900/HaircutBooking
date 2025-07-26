@@ -164,7 +164,7 @@
                         <a class="nav-link" href="admin?action=staff">
                             <i class="bi bi-person-badge"></i> Quản lý nhân viên
                         </a>
-                        <a class="nav-link" href="admin?action=bookings">
+                        <a class="nav-link" href="AdminBookingController">
                             <i class="bi bi-calendar-check"></i> Quản lý đặt lịch
                         </a>
                         <a class="nav-link" href="NotificationController">
@@ -501,7 +501,7 @@
                         <div class="table-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4>Danh sách đặt lịch</h4>
-                                <a href="AdminBookingManager.jsp" class="btn btn-primary">
+                                <a href="AdminBookingController" class="btn btn-primary">
                                     <i class="bi bi-calendar-plus"></i> Xem tất cả
                                 </a>
                             </div>
@@ -587,8 +587,8 @@
                 document.querySelector('a[href="admin?action=services"]').classList.add('active');
             } else if (currentUrl.includes('action=staff')) {
                 document.querySelector('a[href="admin?action=staff"]').classList.add('active');
-            } else if (currentUrl.includes('action=bookings')) {
-                document.querySelector('a[href="admin?action=bookings"]').classList.add('active');
+            } else if (currentUrl.includes('AdminBookingController')) {
+                document.querySelector('a[href="AdminBookingController"]').classList.add('active');
             } else {
                 // Default to dashboard
                 document.querySelector('a[href="#dashboard"]').classList.add('active');

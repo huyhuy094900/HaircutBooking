@@ -58,6 +58,33 @@
             opacity: 0.6;
             transform: none;
         }
+        .payment-options {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        .qr-code-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        .qr-code-placeholder {
+            width: 150px;
+            height: 150px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -158,6 +185,8 @@
                                       placeholder="Yêu cầu đặc biệt hoặc ghi chú...">${param.note}</textarea>
                         </div>
                         
+
+                        
                         <button type="submit" class="btn btn-primary btn-submit w-100" id="submitBtn">
                             <i class="bi bi-check-circle me-2"></i>Xác Nhận Đặt Lịch
                         </button>
@@ -184,8 +213,12 @@ document.addEventListener('DOMContentLoaded', function() {
         dateInput.value = today;
     }
     
+
+    
     // Real-time validation
     const requiredFields = ['serviceId', 'staffId', 'bookingDate', 'shiftId'];
+    
+
     
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
@@ -253,6 +286,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 field.classList.add('is-valid');
             }
         });
+        
+
         
         if (isValid) {
             // Show loading state

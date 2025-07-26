@@ -126,7 +126,7 @@ public class AdminDashboardController extends HttpServlet {
             int totalServices = allServices.size();
             int totalStaff = allStaff.size();
             
-            // Đã xóa toàn bộ logic lấy booking cho admin vì không còn hàm getAllBookings/getBookingsByStatus
+            // Da xoa toan bo logic lay booking cho admin vi khong con ham getAllBookings/getBookingsByStatus
             // ... giữ lại các phần lấy user, service, staff nếu cần ...
             
             // Calculate active users

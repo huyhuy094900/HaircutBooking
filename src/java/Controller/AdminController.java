@@ -55,7 +55,7 @@ public class AdminController extends HttpServlet {
                 System.out.println("AdminController: Routing to showServices");
                 showServices(request, response, serviceDAO);
             } else if ("getService".equals(action)) {
-                // AJAX: Lấy thông tin dịch vụ theo ID, trả về JSON
+                // AJAX: Lay thong tin dich vu theo ID, tra ve JSON
                 int id = Integer.parseInt(request.getParameter("id"));
                 Service service = serviceDAO.getServiceById(id);
                 response.setContentType("application/json");
@@ -87,13 +87,13 @@ public class AdminController extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("id"));
                 serviceDAO.setServiceStatus(id, true);
                 response.setContentType("text/plain");
-                response.getWriter().write("Đã kích hoạt dịch vụ!");
+                response.getWriter().write("Da kich hoat dich vu!");
                 return;
             } else if ("deactivateService".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 serviceDAO.setServiceStatus(id, false);
                 response.setContentType("text/plain");
-                response.getWriter().write("Đã vô hiệu hóa dịch vụ!");
+                response.getWriter().write("Da vo hieu hoa dich vu!");
                 return;
             } else if ("staff".equals(action)) {
                 System.out.println("AdminController: Routing to showStaff");
@@ -172,7 +172,7 @@ public class AdminController extends HttpServlet {
                 System.out.println("AdminController: Error loading staff: " + e.getMessage());
             }
             
-            // Đã xóa toàn bộ logic tính toán activeUsers vì không còn dữ liệu booking
+            // Da xoa toan bo logic tinh toan activeUsers vi khong con du lieu booking
             // ... giữ lại các phần lấy user, service, staff, notification nếu cần ...
             
             // Calculate available staff
@@ -403,7 +403,7 @@ public class AdminController extends HttpServlet {
         }
     }
 
-    // Đổi trạng thái nhân viên
+    // Doi trang thai nhan vien
     private void toggleStaffStatus(HttpServletRequest request, HttpServletResponse response, StaffDAO staffDAO) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Staff staff = staffDAO.getStaffById(id);

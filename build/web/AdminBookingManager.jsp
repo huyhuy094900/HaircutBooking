@@ -1,4 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List" %>
+<%@page import="Model.Booking" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -11,10 +14,8 @@
         body { background: #f5f7fa; min-height: 100vh; }
         .admin-header { background: linear-gradient(135deg, #20c997 0%, #0dcaf0 100%); color: white; padding: 32px 0 24px 0; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         .admin-header h1 { font-weight: 700; font-size: 2.2rem; }
-        .placeholder-card { background: white; border-radius: 18px; padding: 40px 24px; box-shadow: 0 4px 16px rgba(13,202,240,0.08); text-align: center; margin-top: 40px; }
-        .placeholder-card i { font-size: 3.5rem; color: #20c997; margin-bottom: 18px; }
-        .placeholder-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
-        .placeholder-card p { color: #666; }
+        .table-card { background: white; border-radius: 18px; padding: 32px 24px; box-shadow: 0 4px 16px rgba(13,202,240,0.08); margin-top: 24px; }
+        .table th, .table td { vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -35,11 +36,48 @@
     </div>
 </div>
 <div class="container">
-    <div class="placeholder-card">
-        <i class="bi bi-tools"></i>
-        <h3>Chức năng đang phát triển</h3>
-        <p>Trang quản lý đặt lịch cho admin sẽ được cập nhật trong phiên bản tiếp theo.<br>Vui lòng quay lại sau hoặc liên hệ quản trị viên để biết thêm chi tiết.</p>
-        <a href="admin" class="btn btn-outline-primary mt-3"><i class="bi bi-arrow-left"></i> Về Dashboard</a>
+    <div class="table-card">
+        <h3 class="mb-4"><i class="bi bi-list-check"></i> Danh sách lịch đặt</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Khách hàng</th>
+                        <th>Dịch vụ</th>
+                        <th>Nhân viên</th>
+                        <th>Ngày</th>
+                        <th>Ca</th>
+                        <th>Trạng thái</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${allBookings}" var="booking">
+                        <tr>
+                            <td>${booking.bookingId}</td>
+                            <td>${booking.user.fullName}</td>
+                            <td>${booking.service.name}</td>
+                            <td>${booking.staff.staffName}</td>
+                            <td>${booking.bookingDate}</td>
+                            <td>${booking.shift.startTime} - ${booking.shift.endTime}</td>
+                            <td>
+                                <span class="badge 
+                                    ${booking.status == 'Pending' ? 'bg-warning' : 
+                                      booking.status == 'Confirmed' ? 'bg-success' : 
+                                      booking.status == 'Completed' ? 'bg-info' : 'bg-danger'}">
+                                    ${booking.status}
+                                </span>
+                            </td>
+                            <td>${booking.note}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+        <c:if test="${empty allBookings}">
+            <div class="alert alert-info mt-4">Chưa có lịch đặt nào.</div>
+        </c:if>
     </div>
 </div>
 </body>

@@ -217,7 +217,7 @@ public class BookingDAO extends DBContext {
         User user = new User();
         user.setUserId(rs.getInt("user_id"));
         user.setFullName(rs.getString("user_name"));
-        // Có thể set thêm các trường khác nếu cần
+        // Co the set them cac truong khac neu can
         booking.setUser(user);
         Service service = new Service();
         service.setServiceId(rs.getInt("service_id"));
@@ -231,7 +231,7 @@ public class BookingDAO extends DBContext {
         Staff staff = new Staff();
         staff.setStaffId(rs.getInt("staff_id"));
         staff.setStaffName(rs.getString("staff_name"));
-        // Có thể set thêm các trường khác nếu cần
+        // Co the set them cac truong khac neu can
         booking.setStaff(staff);
         Shift shift = new Shift();
         shift.setShiftsId(rs.getInt("shifts_id"));
@@ -331,6 +331,29 @@ public class BookingDAO extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, staffId);
             ps.setDate(2, bookingDate);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    bookings.add(booking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
+
+    // Lấy toàn bộ booking cho admin
+    public List<Booking> getAllBookings() {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, s.price, s.service_id as service_id, st.staff_name, st.staff_id as staff_id, sh.start_time, sh.end_time, sh.shifts_id as shifts_id " +
+                "FROM Bookings b " +
+                "JOIN Users u ON b.user_id = u.user_id " +
+                "JOIN Services s ON b.service_id = s.service_id " +
+                "JOIN Staff st ON b.staff_id = st.staff_id " +
+                "JOIN Shifts sh ON b.shifts_id = sh.shifts_id " +
+                "ORDER BY b.booking_date DESC, sh.start_time ASC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Booking booking = mapResultSetToBooking(rs);

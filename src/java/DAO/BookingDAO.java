@@ -365,4 +365,27 @@ public class BookingDAO extends DBContext {
         }
         return bookings;
     }
+    
+    // Lấy booking theo ID
+    public Booking getBookingById(int bookingId) {
+        String sql = "SELECT b.*, u.full_name as user_name, s.name as service_name, s.price, s.service_id as service_id, st.staff_name, st.staff_id as staff_id, sh.start_time, sh.end_time, sh.shifts_id as shifts_id " +
+                "FROM Bookings b " +
+                "JOIN Users u ON b.user_id = u.user_id " +
+                "JOIN Services s ON b.service_id = s.service_id " +
+                "JOIN Staff st ON b.staff_id = st.staff_id " +
+                "JOIN Shifts sh ON b.shifts_id = sh.shifts_id " +
+                "WHERE b.booking_id = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, bookingId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToBooking(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 } 

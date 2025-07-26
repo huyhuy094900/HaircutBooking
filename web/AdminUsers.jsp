@@ -367,10 +367,6 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a href="user_detail_for_admin?userID=${user.userId}" 
-                                               class="btn btn-sm btn-info" title="Xem chi tiết">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
                                             <c:if test="${user.userStatus && !user.admin}">
                                                 <button type="button" class="btn btn-sm btn-warning" title="Ban user" onclick="banUser(${user.userId}, this)">
                                                     <i class="bi bi-person-x"></i>

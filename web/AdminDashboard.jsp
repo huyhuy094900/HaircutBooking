@@ -167,12 +167,6 @@
                         <a class="nav-link" href="AdminBookingController">
                             <i class="bi bi-calendar-check"></i> Quản lý đặt lịch
                         </a>
-                        <a class="nav-link" href="NotificationController">
-                            <i class="bi bi-bell"></i> Thông báo
-                            <c:if test="${unreadNotificationCount > 0}">
-                                <span class="badge bg-danger ms-2">${unreadNotificationCount}</span>
-                            </c:if>
-                        </a>
                         <hr style="border-color: rgba(255,255,255,0.3);">
                         <a class="nav-link" href="logout">
                             <i class="bi bi-box-arrow-right"></i> Đăng xuất
@@ -569,6 +563,9 @@
         </div>
     </div>
     
+    <!-- Notification System -->
+    <script src="assets/js/notification.js"></script>
+    
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
         // Handle active menu highlighting
@@ -593,6 +590,10 @@
                 // Default to dashboard
                 document.querySelector('a[href="#dashboard"]').classList.add('active');
             }
+            
+            // Initialize notification system
+            const notificationSystem = new NotificationSystem();
+            notificationSystem.startMonitoring(30000, 'adminDashboardCompletedCount');
         });
     </script>
 </body>

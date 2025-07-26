@@ -94,7 +94,6 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-info btn-sm btn-action" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
                                     <button class="btn btn-primary btn-sm btn-action" title="Sửa" data-bs-toggle="modal" data-bs-target="#staffModal"
                                         data-id="${staff.staffId}"
                                         data-name="${fn:replace(staff.staffName, '\'', '\\\'')}" 

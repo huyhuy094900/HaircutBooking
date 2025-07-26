@@ -230,15 +230,15 @@
                         </c:if>
                     </div>
 
-                    <!-- Afternoon Shift (13:00 - 17:00) -->
+                    <!-- Afternoon Shift (12:00 - 17:00) -->
                     <div class="time-slot">
                         <h5 class="time-indicator mb-3">
-                            <i class="bi bi-sun"></i> Ca chiều (13:00 - 17:00)
+                            <i class="bi bi-sun"></i> Ca chiều (12:00 - 17:00)
                         </h5>
                         
                         <c:set var="afternoonBookings" value="" />
                         <c:forEach items="${todayBookings}" var="booking">
-                            <c:if test="${booking.shift.startTime.hours >= 13 && booking.shift.startTime.hours < 17}">
+                            <c:if test="${booking.shift.startTime.hours >= 12 && booking.shift.startTime.hours < 17}">
                                 <c:set var="afternoonBookings" value="${afternoonBookings}1" />
                                 <div class="booking-card">
                                     <div class="row align-items-center">
@@ -307,15 +307,15 @@
                         </c:if>
                     </div>
 
-                    <!-- Evening Shift (18:00 - 21:00) -->
+                    <!-- Evening Shift (17:00 - 21:00) -->
                     <div class="time-slot">
                         <h5 class="time-indicator mb-3">
-                            <i class="bi bi-moon"></i> Ca tối (18:00 - 21:00)
+                            <i class="bi bi-moon"></i> Ca tối (17:00 - 21:00)
                         </h5>
                         
                         <c:set var="eveningBookings" value="" />
                         <c:forEach items="${todayBookings}" var="booking">
-                            <c:if test="${booking.shift.startTime.hours >= 18 && booking.shift.startTime.hours < 21}">
+                            <c:if test="${booking.shift.startTime.hours >= 17 && booking.shift.startTime.hours < 21}">
                                 <c:set var="eveningBookings" value="${eveningBookings}1" />
                                 <div class="booking-card">
                                     <div class="row align-items-center">

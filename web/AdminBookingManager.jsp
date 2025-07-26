@@ -80,5 +80,16 @@
         </c:if>
     </div>
 </div>
+
+<!-- Notification System -->
+<script src="assets/js/notification.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Notification system for booking manager
+    document.addEventListener('DOMContentLoaded', function() {
+        const notificationSystem = new NotificationSystem();
+        notificationSystem.startMonitoring(30000, 'bookingManagerCompletedCount');
+    });
+</script>
 </body>
 </html> 

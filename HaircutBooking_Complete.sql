@@ -166,12 +166,9 @@ VALUES
 -- Insert Shifts
 INSERT INTO Shifts (start_time, end_time) 
 VALUES 
-('08:00:00', '10:00:00'),
-('10:00:00', '12:00:00'),
-('13:00:00', '15:00:00'),
-('15:00:00', '17:00:00'),
-('17:00:00', '19:00:00'),
-('19:00:00', '21:00:00');
+('08:00:00', '12:00:00'),  -- Ca sáng: 8:00 - 12:00
+('12:00:00', '17:00:00'),  -- Ca chiều: 12:00 - 17:00
+('17:00:00', '21:00:00');  -- Ca tối: 17:00 - 21:00
 
 -- Insert Sample Bookings
 INSERT INTO Bookings (user_id, service_id, staff_id, shifts_id, booking_date, status, note) 

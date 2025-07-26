@@ -2,8 +2,10 @@ package Controller;
 
 import DAO.BookingDAO;
 import DAO.StaffDAO;
+import DAO.NotificationDAO;
 import Model.Booking;
 import Model.Staff;
+import Model.Notification;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -99,18 +101,57 @@ public class StaffDashboardController extends HttpServlet {
                 BookingDAO bookingDAO = new BookingDAO();
                 // Da xoa kiem tra booking thuoc ve staff vi khong con ham getBookingById
                 boolean success = bookingDAO.updateBookingStatus(bookingId, newStatus);
+                
                 if (success) {
-                    request.setAttribute("message", "Cập nhật trạng thái thành công!");
+                    // Create notification for admin when booking is completed
+                    if ("Completed".equals(newStatus)) {
+                        createCompletionNotification(bookingId, staff);
+                    }
+                    
+                    request.setAttribute("message", "Cap nhat trang thai thanh cong!");
                 } else {
-                    request.setAttribute("error", "Có lỗi xảy ra khi cập nhật trạng thái!");
+                    request.setAttribute("error", "Co loi xay ra khi cap nhat trang thai!");
                 }
             } catch (NumberFormatException e) {
-                request.setAttribute("error", "ID booking không hợp lệ!");
+                request.setAttribute("error", "ID booking khong hop le!");
             }
         }
         
         // Redirect back to dashboard
         response.sendRedirect("StaffDashboardController");
+    }
+    
+    private void createCompletionNotification(int bookingId, Staff staff) {
+        try {
+            NotificationDAO notificationDAO = new NotificationDAO();
+            BookingDAO bookingDAO = new BookingDAO();
+            
+            // Get booking details
+            Booking booking = bookingDAO.getBookingById(bookingId);
+            if (booking != null) {
+                String title = "Dich vu hoan thanh";
+                String content = String.format(
+                    "Staff %s da hoan thanh dich vu '%s' cho khach hang %s (Booking #%d)",
+                    staff.getStaffName(),
+                    booking.getService().getName(),
+                    booking.getUser().getFullName(),
+                    bookingId
+                );
+                
+                // Create notification for admin (user_id = 1 is admin)
+                Notification notification = new Notification();
+                notification.setUserId(1); // Admin user
+                notification.setTitle(title);
+                notification.setContent(content);
+                notification.setType("completion");
+                notification.setStatus("unread");
+                notification.setRelatedBookingId(bookingId);
+                
+                notificationDAO.createNotification(notification);
+            }
+        } catch (Exception e) {
+            System.err.println("Error creating completion notification: " + e.getMessage());
+        }
     }
 
     @Override

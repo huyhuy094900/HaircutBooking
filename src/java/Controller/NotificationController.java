@@ -33,6 +33,10 @@ public class NotificationController extends HttpServlet {
         if (action == null || action.equals("list")) {
             List<Notification> notifications = notificationDAO.getAllNotifications();
             int unreadCount = notificationDAO.getUnreadCount();
+            
+            // Sort notifications by creation date (newest first)
+            notifications.sort((n1, n2) -> n2.getCreatedAt().compareTo(n1.getCreatedAt()));
+            
             request.setAttribute("notifications", notifications);
             request.setAttribute("unreadCount", unreadCount);
             request.getRequestDispatcher("AdminNotifications.jsp").forward(request, response);
